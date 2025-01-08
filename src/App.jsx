@@ -4,7 +4,8 @@ import viteLogo from '/vite.svg'
 import './App.css'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './Page/Home';
-
+import RootLayout from './RootLayout'
+import Landingpage from './Page/Landingpage';
 function App() {
   const [count, setCount] = useState(0)
 
@@ -12,9 +13,15 @@ function App() {
     <>
 
     <Router>
+      <RootLayout>
       <Routes>
+
         <Route exact path="/" element={<Home/>} />
-        {/* <Route path="/about" component={About} /> */}
+      </Routes>
+      </RootLayout>
+      <Routes>
+        <Route path="/landing" element={<Landingpage/>} />
+
       </Routes>
     </Router>
     </>

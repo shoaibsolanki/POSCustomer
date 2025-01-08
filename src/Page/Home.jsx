@@ -12,9 +12,6 @@ const Home = () => {
                     <p className="text-gray-700">This is the home page of the POS Customer Side application. Use the navigation to explore different sections.</p>
                 </div>
             </main>
-            <footer className="bg-blue-600 w-full py-4 text-center text-white">
-                &copy; 2023 POS Customer Side. All rights reserved.
-            </footer>
         </div>
     );
 };
