@@ -1,7 +1,6 @@
 import { ShoppingCart } from "@mui/icons-material";
 import React from "react";
-import { useCart } from "../../contexts/CartContext";
-
+import {useCart} from '../Context/CartContext'
 const AddToCartButton = ({ item }) => {
   const { addToCart, cart } = useCart();
   const AddedItem = cart?.find((el) => el.item_id === item.item_id);

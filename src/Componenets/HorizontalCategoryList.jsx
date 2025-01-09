@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import DataService from "../services/requestApi";
 // import { useAuth } from "../contexts/AuthConext";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../Context/AuthContext";
 
 const HorizontalCategoryList = () => {
-  //   const {DataByCatogory,selectedCat} =useAuth()
+    const {DataByCatogory,selectedsubcat,setSelectedsubCat , setPage} =useAuth()
   const [categories, setcategories] = useState([]);
   const [subCatgory, setSubCatgory] = useState([]);
-  const [selectedsubcat, setSelectedsubCat] = useState("");
   const selectedStore = localStorage.getItem("selectedStore");
   const parsedStore = selectedStore ? JSON.parse(selectedStore) : null;
   const { saasId, storeId } = parsedStore || {};
@@ -22,7 +22,7 @@ const HorizontalCategoryList = () => {
       const response = await DataService.GetMasterCategory(saasId, storeId);
       console.log(response);
       setcategories(response.data.data);
-      setmasterSelected(response.data.data[0].masterCategoryId);
+      setmasterSelected(response.data.data[0]?.masterCategoryId);
       //   DataByCatogory(response?.data?.data[0]?.category_id)
     } catch (error) {
       console.log(error);
@@ -41,7 +41,7 @@ const HorizontalCategoryList = () => {
       );
       if (response.data.status) {
         setSubCatgory(response.data.data);
-        setSelectedsubCat(response.data.data[0].id);
+        setSelectedsubCat(response.data.data[0].category);
       }
     } catch (error) {
       console.log(error);
@@ -59,6 +59,11 @@ const HorizontalCategoryList = () => {
       GetSubCatgory();
     }
   }, [selectedmaster]);
+  
+  useEffect(() => {
+    DataByCatogory(1)
+  }, [selectedsubcat])
+  
 
   return (
     <>
@@ -106,10 +111,12 @@ const HorizontalCategoryList = () => {
               <p
                 className="mt-2 text-lg font-semibold cursor-pointer p-3 rounded"
                 style={{
-                  background: selectedsubcat == category.id ? "#003f62" : "",
-                  color: selectedsubcat == category.id ? "#fff" : "",
+                  background: selectedsubcat == category.category ? "#003f62" : "",
+                  color: selectedsubcat == category.category ? "#fff" : "",
                 }}
-                // onClick={()=>{DataByCatogory(category.category_id)}}
+                onClick={()=>{setSelectedsubCat(category.category);
+                    setPage(1)
+                }}
               >
                 {category.category}
               </p>

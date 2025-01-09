@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import AddToCartButton from "./MicroComponenets/AddToCartButton";
+// import AddToCartButton from "./MicroComponenets/AddToCartButton";
 import { Link } from "react-router-dom";
 // import { useCart } from "../contexts/CartContext";
-import keychain from ".././imgs/keychain.png";
-import ColorShow from "./MicroComponenets/ColorShow";
+// import keychain from ".././imgs/keychain.png";
+// import ColorShow from "./MicroComponenets/ColorShow";
 import { BASEURL } from "../services/http-Pos";
+import AddToCartButton from "./AddToCartButton";
 
 const ProductComponent = ({ flex_direction, data }) => {
   const [isHovering, setIsHovering] = useState(false);
@@ -101,7 +102,7 @@ const ProductComponent = ({ flex_direction, data }) => {
                    style={{
                     height:"9rem"
                    }}
-                   src={`${BASEURL.ENDPOINT_URL}item/get-image/${data.item_id}`} alt={data.item_name}/>
+                   src={`${BASEURL.ENDPOINT_URL}item/get-image/${data?.item_id}`} alt={data?.item_name}/>
                   <button className="absolute top-2 right-2 bg-white rounded-full p-2 shadow-md">
                     <svg className="w-6 h-6 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M3.172 5.172a4 4 0 011.414-2.828A4 4 0 017.172 2h.008a4 4 0 012.828 1.172L10 3.414l.992-.992a4 4 0 015.656 5.656L10 17.656l-6.656-6.656a4 4 0 01-.172-5.828z" />

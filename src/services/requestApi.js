@@ -25,7 +25,7 @@ class DataService {
     return https.get(`/item/view-item-detil/${id}`);
   }
   GetCartItems(saasId, storeId, id) {
-    return https.get(`/price-check/getcart/${saasId}/${storeId}/${id}`);
+    return https.get(`price-check/getcart/${saasId}/${storeId}/${id}`);
   }
   AddItemsToCart(item, saasId, storeId, id) {
     return https.post(

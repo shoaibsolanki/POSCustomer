@@ -1,10 +1,11 @@
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useState, useContext, useEffect } from "react";
 import DataService from "../services/requestApi";
 // Create a context for authentication
 const AuthContext = createContext();
 
 // Create a provider component
 export const AuthProvider = ({ children }) => {
+  const [selectedsubcat, setSelectedsubCat] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [store, setStores] = useState([]);
   const [address, setAddress] = useState({
@@ -26,6 +27,7 @@ export const AuthProvider = ({ children }) => {
   const [hasMore, setHasMore] = useState(true);
   const [products, setProducts] = useState([]);
   const [selectedCat, setSelectedCat] = useState();
+  const [page, setPage] = useState(1);
   const login = () => {
     setIsAuthenticated(true);
   };
@@ -127,33 +129,52 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const DataByCatogory = async (id, page) => {
+  const DataByCatogory = async () => {
     try {
+      if(!selectedsubcat)return
       const response = await DataService.GetItemByCatogory(
         saasId,
         storeId,
-        id,
+        selectedsubcat,
         page
       );
       console.log(response);
+  
       if (response.data.status) {
-        const updatedProducts = response.data.data.map((item) => ({
+        const newProducts = response.data.data.map((item) => ({
           ...item,
           new_price: item.price,
         }));
-        setHasMore(false);
-        setProducts(updatedProducts);
-        setSelectedCat(id);
+      if(page == 1){
+      setProducts(newProducts)
+      }else{
+        setProducts((prevProducts) => [...prevProducts, ...newProducts]); // Append new data
+      }
+        // Check if there are more products to load
+        // const isLastPage = ; 
+        const isLastPage = response.data.next === null;
+        setHasMore(!isLastPage); // Set `hasMore` to `false` if it's the last page
+        setPage((prevPage) => prevPage + 1);
+        if(isLastPage){
+          setPage(1)
+        }
       }
     } catch (error) {
       console.log(error);
     }
   };
-
+  // useEffect(() => {
+  //   DataByCatogory()
+  // }, [selectedsubcat])
+  
   return (
     <AuthContext.Provider
       value={{
         DataByCatogory,
+        selectedsubcat,
+        setSelectedsubCat,
+        page,
+        setPage,
         hasMore,
         products,
         setHasMore,

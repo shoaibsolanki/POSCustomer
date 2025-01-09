@@ -7,6 +7,7 @@ import Home from './Page/Home';
 import RootLayout from './RootLayout'
 import Landingpage from './Page/Landingpage';
 import StoresPage from './Page/StoresPage';
+import {  CartProvider } from './Context/CartContext';
 function App() {
   const [count, setCount] = useState(0)
 
@@ -14,6 +15,8 @@ function App() {
     <>
 
     <Router>
+      <CartProvider>
+
       <RootLayout>
       <Routes>
         <Route exact path="/" element={<Home/>} />
@@ -21,6 +24,7 @@ function App() {
         
       </Routes>
       </RootLayout>
+      </CartProvider>
       <Routes>
         <Route path="/landing" element={<Landingpage/>} />
 
