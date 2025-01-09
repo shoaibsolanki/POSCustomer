@@ -1,12 +1,12 @@
 import React, { createContext, useState, useContext } from "react";
-
+import DataService from "../services/requestApi";
 // Create a context for authentication
 const AuthContext = createContext();
 
 // Create a provider component
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [store , setStores] =  useState([])
+  const [store, setStores] = useState([]);
   const [address, setAddress] = useState({
     postalCode: null,
     route: null,
@@ -15,11 +15,17 @@ export const AuthProvider = ({ children }) => {
     Province: null,
     error: null,
   });
+  const selectedStore = localStorage.getItem("selectedStore");
+  const parsedStore = selectedStore ? JSON.parse(selectedStore) : null;
+  const { saasId, storeId } = parsedStore || {};
   const [location, setLocation] = useState({
     latitude: null,
     longitude: null,
     error: null,
   });
+  const [hasMore, setHasMore] = useState(true);
+  const [products, setProducts] = useState([]);
+  const [selectedCat, setSelectedCat] = useState();
   const login = () => {
     setIsAuthenticated(true);
   };
@@ -53,13 +59,6 @@ export const AuthProvider = ({ children }) => {
           (await data.results.find((component) =>
             component.types.includes("route")
           )?.formatted_address) || "Route not found";
-        // Set the address and log the postal code
-        // setAddress(formattedAddress);
-        // console.log("Formatted Address:", addressComponents.find(component =>
-        //   component.types.includes('route')
-        // ).long_name);
-        // console.log("Postal Code:", PostalCode);
-        // console.log("Postal Code:", Route);
         setAddress({
           postalCode: PostalCode,
           route: Route,
@@ -128,9 +127,45 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const DataByCatogory = async (id, page) => {
+    try {
+      const response = await DataService.GetItemByCatogory(
+        saasId,
+        storeId,
+        id,
+        page
+      );
+      console.log(response);
+      if (response.data.status) {
+        const updatedProducts = response.data.data.map((item) => ({
+          ...item,
+          new_price: item.price,
+        }));
+        setHasMore(false);
+        setProducts(updatedProducts);
+        setSelectedCat(id);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <AuthContext.Provider
-      value={{setStores ,store, isAuthenticated, login, logout, getLocation,address }}
+      value={{
+        DataByCatogory,
+        hasMore,
+        products,
+        setHasMore,
+        setProducts,
+        setStores,
+        store,
+        isAuthenticated,
+        login,
+        logout,
+        getLocation,
+        address,
+      }}
     >
       {children}
     </AuthContext.Provider>

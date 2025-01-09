@@ -66,11 +66,16 @@ class DataService {
       `customer/get-all-customer-address-app/${id}/${saasId}/${storeId}`
     );
   }
-  GetCategoryList(saasId){
-    return https.get(`/item/category-list/${saasId}`)
+  GetMasterCategory(saasId,storeId){
+    return https.get(`Master-category/get-list-master/${saasId}/${storeId}`)
   }
-  GetItemByCatogory(id, saasid){
-    return https.get(`item/view-menu-by-category/${id}/${saasid}`)
+  
+  GetSubCatrgory(saasId, storeId, MCID){
+    return https.get(`Master-category/get-list/${saasId}/${storeId}/${MCID}`)
+  }
+
+  GetItemByCatogory(saasid, storeId , category_name, page){
+    return https.get(`/item/get-category-list/${saasid}/${storeId}/${category_name}/${page}`)
   }
 
   getAddressofStores(){
