@@ -6,6 +6,7 @@ const AuthContext = createContext();
 // Create a provider component
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [store , setStores] =  useState([])
   const [address, setAddress] = useState({
     postalCode: null,
     route: null,
@@ -129,7 +130,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, login, logout, getLocation,address }}
+      value={{setStores ,store, isAuthenticated, login, logout, getLocation,address }}
     >
       {children}
     </AuthContext.Provider>

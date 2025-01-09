@@ -16,10 +16,10 @@ import { useAuth } from "../Context/AuthContext";
 const Landingpage = () => {
   const navigate = useNavigate();
   const [Address, setGetAddress] = React.useState("");
-    const { getLocation,address} = useAuth();
+    const { getLocation,address , setStores} = useAuth();
   const selectedStore = localStorage.getItem("selectedStore");
-  const [options, setOptions] = useState([]);
-  const [menuIsOpen, setMenuIsOpen] = useState(true);
+  // const [options, setOptions] = useState([]);
+  // const [menuIsOpen, setMenuIsOpen] = useState(true);
   const dropdownRef = useRef(null);
   const [type, setType] = useState('')
   const [snackbar, setSnackbar] = useState({
@@ -96,16 +96,20 @@ const Landingpage = () => {
 
         const response = await DataService.GetStoreByPinCode(address.postalCode,type);
       console.log(response);
-      const formattedOptions = response.data.data.map((item) => ({
-        value: item.storeId, // You can change 'store_id' to any field you want as the value
-        label: `${item.address}`, // Customize label as needed
-      }));
-      setOptions(formattedOptions);
-      // Focus the dropdown after setting options
-      if (dropdownRef.current) {
-        setMenuIsOpen(true);
-        dropdownRef.current.focus();
+      if(response.data.data.length > 0){
+        setStores(response.data.data)
+        navigate("/stores");
       }
+      // const formattedOptions = response.data.data.map((item) => ({
+      //   value: item.storeId, // You can change 'store_id' to any field you want as the value
+      //   label: `${item.address}`, // Customize label as needed
+      // }));
+      // setOptions(formattedOptions);
+      // Focus the dropdown after setting options
+      // if (dropdownRef.current) {
+      //   setMenuIsOpen(true);
+      //   dropdownRef.current.focus();
+      // }
     } catch (error) {
       console.log(error);
     }
@@ -180,18 +184,18 @@ return (
       </FormControl>
     {/* </div> */}
             <h1 className="text-3xl font-bold mb-4">Order delivery near you</h1>
-            <div className="w-full max-w-md px-4 ">
+            <div className="w-full max-w-md px-4 flex justify-center ">
                 <button
                     onClick={() => GetCurrentaddress()}
                     style={{
                         fontFamily: "Inter",
                     }}
-                    className="px-1 mb-2 py-1 bg-black text-white rounded font-bold flex justify-center items-center"
+                    className="w-[380px] px-1 mb-2 py-1 bg-black text-white rounded font-bold flex justify-center items-center"
                 >
                     <LocationOnIcon className="mx-1 text-white" />
                     By Current Location
                 </button>
-                <div className="flex justify-between gap-2">
+                {/* <div className="flex justify-between gap-2">
                     <SearchableSelect
                         menuIsOpen={menuIsOpen}
                         dropdownRef={dropdownRef}
@@ -210,7 +214,7 @@ return (
                             Find Store
                         </button>
                     </div>
-                </div>
+                </div> */}
             </div>
         </div>
         <Snackbar
