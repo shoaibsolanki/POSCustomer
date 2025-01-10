@@ -8,6 +8,9 @@ import RootLayout from './RootLayout'
 import Landingpage from './Page/Landingpage';
 import StoresPage from './Page/StoresPage';
 import {  CartProvider } from './Context/CartContext';
+import Login from './Page/Login';
+import Cart from './Componenets/Cart';
+import CartPage from './Page/Cartpage';
 function App() {
   const [count, setCount] = useState(0)
 
@@ -21,14 +24,12 @@ function App() {
       <Routes>
         <Route exact path="/" element={<Home/>} />
         <Route exact path="/stores" element={<StoresPage/>} />
-        
+        <Route exact path="/login" element={<Login/>} />
+        <Route exact path="/cart" element={<CartPage/>} />
+        <Route path="/landing" element={<Landingpage/>} />
       </Routes>
       </RootLayout>
       </CartProvider>
-      <Routes>
-        <Route path="/landing" element={<Landingpage/>} />
-
-      </Routes>
     </Router>
     </>
   )

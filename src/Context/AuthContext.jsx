@@ -7,6 +7,14 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [selectedsubcat, setSelectedsubCat] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authData, setAuthData] = useState(() => {
+    const storedAuthData = JSON.parse(localStorage.getItem("authData"));
+    if (storedAuthData) {
+      return storedAuthData;
+    } else {
+      return { token: null, user: null };
+    }
+  });
   const [store, setStores] = useState([]);
   const [address, setAddress] = useState({
     postalCode: null,
@@ -28,8 +36,17 @@ export const AuthProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
   const [selectedCat, setSelectedCat] = useState();
   const [page, setPage] = useState(1);
-  const login = () => {
-    setIsAuthenticated(true);
+  useEffect(() => {
+    const storedAuthData = JSON.parse(localStorage.getItem("authData"));
+    if (storedAuthData) {
+      setAuthData(storedAuthData);
+    }
+  }, []);
+
+  const login = (data, token) => {
+    setAuthData(data);
+    localStorage.setItem("authData", JSON.stringify(data));
+    localStorage.setItem("authToken", token);
   };
 
   const logout = () => {
@@ -186,6 +203,7 @@ export const AuthProvider = ({ children }) => {
         logout,
         getLocation,
         address,
+        authData
       }}
     >
       {children}

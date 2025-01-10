@@ -1,5 +1,6 @@
-import React, { createContext, useReducer } from 'react';
+import React, { createContext, useEffect, useReducer } from 'react';
 import DataService from '../services/requestApi'
+import { useAuth } from './AuthContext';
 // Create a context
 const CartContext = createContext();
 
@@ -44,16 +45,20 @@ const CartProvider = ({ children }) => {
     const selectedStore = localStorage.getItem("selectedStore");
   const parsedStore = selectedStore ? JSON.parse(selectedStore) : null;
   const { saasId, storeId } = parsedStore || {};
-const getCart = async (userId) => {
+  const {authData} = useAuth()
+  const {id} = authData
+const getCart = async () => {
     try {
-        // const response = await DataService.GetCartItems(saasId, storeId,) ;
-        // const data = await response.json();
+        const response = await DataService.GetCartItems(saasId, storeId,id) ;
+        const data =  response.data.data;
         dispatch({ type: 'SET_CART', payload: data });
     } catch (error) {
         console.error('Failed to fetch cart:', error);
     }
 };
-    const addItem = (item) => {
+    const addItem = async (item) => {
+        const response = await DataService.AddItemsToCart(item, saasId, storeId, id)
+        console.log(response)
         dispatch({ type: 'ADD_ITEM', payload: item });
     };
 
@@ -63,10 +68,15 @@ const getCart = async (userId) => {
 
     const deleteItem = (id) => {
         dispatch({ type: 'DELETE_ITEM', payload: { id } });
-    };
+    }; 
+
+    useEffect(() => {
+        getCart()
+    }, [])
+    
 
     return (
-        <CartContext.Provider value={{ cart: state.cart, addItem, editItem, deleteItem }}>
+        <CartContext.Provider value={{ cart: state.cart, addItem, editItem, deleteItem ,getCart}}>
             {children}
         </CartContext.Provider>
     );
