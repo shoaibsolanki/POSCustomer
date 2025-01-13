@@ -32,7 +32,7 @@ const cartReducer = (state, action) => {
         case 'DELETE_ITEM':
             return {
                 ...state,
-                cart: state.cart.filter(item => item.id !== action.payload.id)
+                cart: state.cart.filter(item => item.item_id !== action.payload.itemid)
             };
         default:
             return state;
@@ -50,7 +50,7 @@ const CartProvider = ({ children }) => {
 const getCart = async () => {
     try {
         const response = await DataService.GetCartItems(saasId, storeId,id) ;
-        const data =  response.data.data;
+        const data =  response.data.data.products;
         dispatch({ type: 'SET_CART', payload: data });
     } catch (error) {
         console.error('Failed to fetch cart:', error);
@@ -59,24 +59,55 @@ const getCart = async () => {
     const addItem = async (item) => {
         const response = await DataService.AddItemsToCart(item, saasId, storeId, id)
         console.log(response)
-        dispatch({ type: 'ADD_ITEM', payload: item });
+        if(response.data.status){
+            getCart()
+            // dispatch({ type: 'ADD_ITEM', payload: item });
+
+        }
     };
 
-    const editItem = (item) => {
-        dispatch({ type: 'EDIT_ITEM', payload: item });
+    const editItem = async (qty,itemid) => {
+        try {
+            const response = await DataService.UpdateCartitem(qty, saasId, storeId, id, itemid);
+            if (response.data.status) {
+                getCart();
+                // dispatch({ type: 'EDIT_ITEM', payload: item });
+            }
+        } catch (error) {
+            console.error('Failed to update item:', error);
+        }
     };
 
-    const deleteItem = (id) => {
-        dispatch({ type: 'DELETE_ITEM', payload: { id } });
+    const deleteItem =async (itemid) => {
+            try {
+                const res=await DataService.DeleteItemsFromCart( saasId, storeId, id, itemid);
+                if(res.data.status){
+                    getCart()
+                    // dispatch({ type: 'DELETE_ITEM', payload: { itemid } });
+                }
+            } catch (error) {
+                console.error('Failed to delete item:', error);
+            }
     }; 
+    //Clear All Product
+    const clearCart = async () => {
+        try {
+            await DataService.DeleteAllItemsFromCart(saasId, storeId, id);
+            dispatch({ type: 'SET_CART', payload: [] });
+        } catch (error) {
+            console.error('Failed to clear cart:', error);
+        }
+    };
 
     useEffect(() => {
-        getCart()
+        if(id){
+            getCart()
+        }
     }, [])
     
 
     return (
-        <CartContext.Provider value={{ cart: state.cart, addItem, editItem, deleteItem ,getCart}}>
+        <CartContext.Provider value={{ cart: state.cart, addItem, editItem, deleteItem ,getCart,clearCart}}>
             {children}
         </CartContext.Provider>
     );

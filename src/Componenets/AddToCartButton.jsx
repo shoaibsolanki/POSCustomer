@@ -3,7 +3,7 @@ import React from "react";
 import {useCart} from '../Context/CartContext'
 const AddToCartButton = ({ item }) => {
   const { addItem, cart } = useCart();
-  const AddedItem =cart && cart?.find((el) => el.item_id === item.item_id);
+  const AddedItem = Array.isArray(cart) ? cart.find((el) => el.item_id === item.item_id) : null;
 
   return (
     <div className="my-4 flex items-center gap-8">

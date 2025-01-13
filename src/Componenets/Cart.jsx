@@ -24,9 +24,8 @@ import HorizontalLinearAlternativeLabelStepper from "../Componenets/MicroCompone
 
 const CartItem = ({
   item,
-  removeFromCart,
-  handleIncrease,
-  handleDecrease,
+  deleteItem,
+  editItem,
   isAuthenticated,
   bankAccount
 }) => (
@@ -54,11 +53,11 @@ const CartItem = ({
         </Grid>
         <Grid item xs={2}>
           <Box display="flex" alignItems="center">
-            <IconButton onClick={() => handleDecrease(item)}>
+            <IconButton onClick={() => editItem(item.product_qty -1, item.id)}>
               <Remove />
             </IconButton>
             <Typography variant="body1">{item.product_qty}</Typography>
-            <IconButton onClick={() => handleIncrease(item)}>
+            <IconButton onClick={() => editItem(item.product_qty +1, item.id)}>
               <Add />
             </IconButton>
           </Box>
@@ -69,8 +68,8 @@ const CartItem = ({
           </Typography>
         </Grid>
         <Grid item xs={1}>
-          <IconButton onClick={() => removeFromCart(item)}>
-            <Delete onClick={() => removeFromCart(item)} />
+          <IconButton onClick={() => deleteItem(item.id)}>
+            <Delete onClick={() => deleteItem(item.id)} />
           </IconButton>
         </Grid>
       </Grid>
@@ -104,7 +103,7 @@ const CartItem = ({
             </div>
           </div>
           
-          <IconButton size="small" onClick={() => removeFromCart(item)}>
+          <IconButton size="small" onClick={() => deleteItem(item.id)}>
             <Delete fontSize="small" />
           </IconButton>
         </div>
@@ -112,11 +111,11 @@ const CartItem = ({
         {/* Quantity and Total Price */}
         <div className="flex items-center justify-between mt-2">
           <div className="flex items-center space-x-2">
-            <IconButton size="small" onClick={() => handleDecrease(item)}>
+            <IconButton size="small"  onClick={() => editItem(item.product_qty -1, item.id)}>
               <Remove fontSize="small" />
             </IconButton>
             <Typography variant="body2">{item.product_qty}</Typography>
-            <IconButton size="small" onClick={() => handleIncrease(item)}>
+            <IconButton size="small"  onClick={() => editItem(item.product_qty +1, item.id)}>
               <Add fontSize="small" />
             </IconButton>
           </div>
@@ -135,10 +134,9 @@ const CartItem = ({
 const Cart = () => {
   const {
     clearCart,
-    removeFromCart,
+    deleteItem,
     cart,
-    handleIncrease,
-    handleDecrease,
+    editItem
   } = useCart();
   const totalPrice = cart?.reduce((total, product) => {
     return total + product.price * product.product_qty;
@@ -228,9 +226,8 @@ const Cart = () => {
                       <CartItem
                         item={item}
                         isAuthenticated={isAuthenticated}
-                        removeFromCart={removeFromCart}
-                        handleIncrease={handleIncrease}
-                        handleDecrease={handleDecrease}
+                        deleteItem={deleteItem}
+                        editItem={editItem}
                         bankAccount={bankAccount}
                       />
                     </Suspense>
@@ -385,9 +382,8 @@ const Cart = () => {
                   key={index}
                   item={item}
                   isAuthenticated={isAuthenticated}
-                  removeFromCart={removeFromCart}
-                  handleIncrease={handleIncrease}
-                  handleDecrease={handleDecrease}
+                  deleteItem={deleteItem}
+                  editItem={editItem}
                 />
               );
             })}

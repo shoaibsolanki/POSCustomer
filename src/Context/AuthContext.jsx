@@ -1,12 +1,14 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import DataService from "../services/requestApi";
+import { useNavigate } from "react-router-dom";
 // Create a context for authentication
 const AuthContext = createContext();
 
 // Create a provider component
 export const AuthProvider = ({ children }) => {
   const [selectedsubcat, setSelectedsubCat] = useState("");
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const navigate = useNavigate()
+  const [isAuthenticated, setIsAuthenticated] = useState( JSON.parse(localStorage.getItem("authData")));
   const [authData, setAuthData] = useState(() => {
     const storedAuthData = JSON.parse(localStorage.getItem("authData"));
     if (storedAuthData) {
@@ -15,6 +17,7 @@ export const AuthProvider = ({ children }) => {
       return { token: null, user: null };
     }
   });
+  const [allOrders, setAllOrders] = useState([]); 
   const [store, setStores] = useState([]);
   const [address, setAddress] = useState({
     postalCode: null,
@@ -50,7 +53,11 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    setIsAuthenticated(false);
+    console.log("Logged Out");
+    setAuthData();
+    localStorage.removeItem("authData");
+    localStorage.clear();
+    navigate("/login")
   };
   const GetAddressByCoordinates = async (latitude, longitude) => {
     try {
@@ -180,9 +187,26 @@ export const AuthProvider = ({ children }) => {
       console.log(error);
     }
   };
-  // useEffect(() => {
-  //   DataByCatogory()
-  // }, [selectedsubcat])
+   
+
+  const getOrderHistory = async (store_id, saas_id, id) => {
+    try {
+      const response = await DataService.OrderHistory(store_id, saas_id, id);
+      const reversedOrders = response.data.data.slice().reverse();
+      setAllOrders(reversedOrders);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  // console.log(allOrders);
+  const { id } = authData;
+  useEffect(() => {
+    if(id){
+      getOrderHistory(storeId , saasId, id);
+    }
+  }, [id]);
+
+  
   
   return (
     <AuthContext.Provider
@@ -203,7 +227,9 @@ export const AuthProvider = ({ children }) => {
         logout,
         getLocation,
         address,
-        authData
+        authData,
+        getOrderHistory,
+        allOrders
       }}
     >
       {children}

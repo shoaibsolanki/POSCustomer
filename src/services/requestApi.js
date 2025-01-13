@@ -42,7 +42,7 @@ class DataService {
   }
   DeleteItemsFromCart(saasId, storeId, id, itemid) {
     return https.delete(
-      `/price-check/deleteproduct/${saasId}/${storeId}/${id}/${itemid}`
+      `price-check/deleteproduct/${saasId}/${storeId}/${id}/${itemid}`
     );
   }
   DeleteAllItemsFromCart(saasId, storeId, id) {
@@ -50,9 +50,12 @@ class DataService {
       `price-check/delete-all-products/${saasId}/${storeId}/${id}`
     );
   }
+  UpdateCartitem(qty, saasId, storeId, userid, itemid ){
+    return https.put(`price-check/updatevegetableproduct/${qty}/${saasId}/${storeId}/${userid}/${itemid}`)
+  }
   OrderHistory(storeId, saasId, id) {
     return https.get(
-      `order/view-order-detail-fastside/${storeId}/${saasId}/${id}`
+      `order/view-order-detail-app/${storeId}/${saasId}/${id}`
     );
   }
   CreateOrder(data) {
@@ -90,8 +93,8 @@ class DataService {
   GetStoreByCuisine(address,cuisine_id){
     return https.get(`/storeMaster/get-store-Byaddress/${address}/${cuisine_id}`)
   }
-  GetDowloaPdf(orderId,saasid,storeId){
-    return https.get(`/order/get-invoice-for-order/${orderId}/${saasid}/${storeId}`)
+  GetDowloaPdf(saasid,storeId,orderId){
+    return https.get(`order/get-order-details-list/${saasid}/${storeId}/${orderId}`)
   }
   GetStoreByPinCode(pincode,type){
     return https.get(`/auth/getstoreBypincodeType/${pincode}/${type}`)
