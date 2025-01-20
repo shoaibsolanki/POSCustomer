@@ -5,6 +5,7 @@ import { useCart } from "../Context/CartContext";
 import { useAuth } from "../Context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import HorizontalLinearAlternativeLabelStepper from "../Componenets/MicroComponenets/HorizontalLinearAlternativeLabelStepper";
+import CheckoutPage from "../Componenets/MicroComponenets/CheckoutPage";
 
 const Checkout = () => {
   const { cart } = useCart();
@@ -20,8 +21,8 @@ const Checkout = () => {
       <div className="my-4  ">
         <HorizontalLinearAlternativeLabelStepper activeStep={1} />
         <div className="flex  justify-center max-md:flex-col-reverse ">
-          {/* <UserInformation />
-          <ItemsShowInSide items={cart} /> */}
+          <CheckoutPage />
+          {/* <ItemsShowInSide items={cart} /> */}
         </div>
       </div>
     );

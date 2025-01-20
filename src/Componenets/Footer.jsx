@@ -5,7 +5,7 @@ const Footer = () => {
   return (
     <footer className="bg-background text-foreground p-6 bg-slate-300">
       <div className="text-start mb-4">
-        <h1 className="text-2xl font-bold">Food4You.</h1>
+        <h1 className="text-2xl font-bold">OMNI Stores.</h1>
         <p className="text-muted-foreground">
           {/* {address} */}
         </p>
@@ -42,7 +42,7 @@ const Footer = () => {
         </a>
       </div>
       <div className="text-center mt-4 text-muted-foreground">
-        <p>© 2024 Food4You Inc. All rights Reserved</p>
+        <p>© 2024 OMNISTORE Inc. All rights Reserved</p>
       </div>
     </footer>
   )

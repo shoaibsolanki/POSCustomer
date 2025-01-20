@@ -16,7 +16,7 @@ import { useAuth } from "../Context/AuthContext";
 const Landingpage = () => {
   const navigate = useNavigate();
   const [Address, setGetAddress] = React.useState("");
-    const { getLocation,address , setStores} = useAuth();
+    const { getLocation,getaddress , setStores} = useAuth();
   const selectedStore = localStorage.getItem("selectedStore");
   // const [options, setOptions] = useState([]);
   // const [menuIsOpen, setMenuIsOpen] = useState(true);
@@ -36,7 +36,7 @@ const Landingpage = () => {
 //       console.log(response);
 //       const formattedOptions = response.data.data.map((item) => ({
 //         value: item.saas_id, // You can change 'store_id' to any field you want as the value
-//         label: `${item.address}`, // Customize label as needed
+//         label: `${item.getaddress}`, // Customize label as needed
 //       }));
 //       setOptions(formattedOptions);
 //     } catch (error) {
@@ -81,7 +81,7 @@ const Landingpage = () => {
   // }
   const GetCurrentaddress = async () => {
     await getLocation()
-    //  console.log(address )
+    //  console.log(getaddress )
   };
   const handleStorebyPin = async () => {
     try {
@@ -94,15 +94,21 @@ const Landingpage = () => {
             return;
           }
 
-        const response = await DataService.GetStoreByPinCode(address.postalCode,type);
+        const response = await DataService.GetStoreByPinCode(getaddress?.postalCode,type);
       console.log(response);
       if(response.data.data.length > 0){
         setStores(response.data.data)
         navigate("/stores");
+      }else{
+        setSnackbar({
+          open: true,
+          message: "At This Time No Store Found on Your Location",
+          severity: "error",
+        });
       }
       // const formattedOptions = response.data.data.map((item) => ({
       //   value: item.storeId, // You can change 'store_id' to any field you want as the value
-      //   label: `${item.address}`, // Customize label as needed
+      //   label: `${item.getaddress}`, // Customize label as needed
       // }));
       // setOptions(formattedOptions);
       // Focus the dropdown after setting options
@@ -116,11 +122,12 @@ const Landingpage = () => {
   };
 
      useEffect(() => {
-      if(address.postalCode){
+      if(getaddress?.postalCode){
+        console.log("addres is comming")
         handleStorebyPin()
       }
 
-     }, [address])
+     }, [getaddress])
 
 return (
     <div

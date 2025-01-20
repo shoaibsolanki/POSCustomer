@@ -32,7 +32,7 @@ const cartReducer = (state, action) => {
         case 'DELETE_ITEM':
             return {
                 ...state,
-                cart: state.cart.filter(item => item.item_id !== action.payload.itemid)
+                cart: state.cart.filter(item => item.id !== action.payload.itemid)
             };
         default:
             return state;
@@ -46,26 +46,61 @@ const CartProvider = ({ children }) => {
   const parsedStore = selectedStore ? JSON.parse(selectedStore) : null;
   const { saasId, storeId } = parsedStore || {};
   const {authData} = useAuth()
-  const {id} = authData
+  const id = authData ? authData.id : null;
 const getCart = async () => {
-    try {
-        const response = await DataService.GetCartItems(saasId, storeId,id) ;
-        const data =  response.data.data.products;
-        dispatch({ type: 'SET_CART', payload: data });
-    } catch (error) {
-        console.error('Failed to fetch cart:', error);
+    if (id) {
+        try {
+            const response = await DataService.GetCartItems(saasId, storeId, id);
+            const data = response.data.data.products;
+            dispatch({ type: 'SET_CART', payload: data });
+        } catch (error) {
+            console.error('Failed to fetch cart:', error);
+        }
+    } else {
+        const localCart = JSON.parse(localStorage.getItem('cart')) || [];
+        dispatch({ type: 'SET_CART', payload: localCart });
     }
 };
+    // const addItem = async (item) => {
+    //     const response = await DataService.AddItemsToCart(item, saasId, storeId, id)
+    //     console.log(response)
+    //     if(response.data.status){
+    //         getCart()
+    //         // dispatch({ type: 'ADD_ITEM', payload: item });
+
+    //     }
+    // };
     const addItem = async (item) => {
-        const response = await DataService.AddItemsToCart(item, saasId, storeId, id)
-        console.log(response)
-        if(response.data.status){
-            getCart()
-            // dispatch({ type: 'ADD_ITEM', payload: item });
+        if (id) {
+            const response = await DataService.AddItemsToCart(item, saasId, storeId, id);
+            console.log(response);
+            if (response.data.status) {
+                getCart();
+            }
+        } else {
+            const localCart = JSON.parse(localStorage.getItem('cart')) || [];
+            const existingItemIndex = localCart.filter((cartItem)=>( cartItem.item_id === item.item_id))
+            console.log(existingItemIndex)
+            if (existingItemIndex.length > 0) {
+                // Item already exists in the cart, update the quantity
+                localCart.forEach(cartItem => {
+                    if (cartItem.item_id === item.item_id) {
+                        cartItem.product_qty += 1;
+                    }
+                });
+                localStorage.setItem('cart', JSON.stringify(localCart));
+                dispatch({ type: 'SET_CART', payload: localCart });
+                // getCart();
+            } else {
+                // Item does not exist in the cart, add new item with unique id
+                const newItem = { ...item, id: Date.now() };
+                localCart.push(newItem);
+                dispatch({ type: 'ADD_ITEM', payload: newItem });
+                localStorage.setItem('cart', JSON.stringify(localCart));
+            }
 
         }
     };
-
     const editItem = async (qty,itemid) => {
         try {
             const response = await DataService.UpdateCartitem(qty, saasId, storeId, id, itemid);
@@ -78,36 +113,53 @@ const getCart = async () => {
         }
     };
 
-    const deleteItem =async (itemid) => {
+    const deleteItem = async (itemid) => {
+        if (id) {
             try {
-                const res=await DataService.DeleteItemsFromCart( saasId, storeId, id, itemid);
-                if(res.data.status){
-                    getCart()
+                const res = await DataService.DeleteItemsFromCart(saasId, storeId, id, itemid);
+                if (res.data.status) {
+                    getCart();
                     // dispatch({ type: 'DELETE_ITEM', payload: { itemid } });
                 }
             } catch (error) {
                 console.error('Failed to delete item:', error);
             }
-    }; 
-    //Clear All Product
-    const clearCart = async () => {
-        try {
-            await DataService.DeleteAllItemsFromCart(saasId, storeId, id);
-            dispatch({ type: 'SET_CART', payload: [] });
-        } catch (error) {
-            console.error('Failed to clear cart:', error);
+        } else {
+            const localCart = JSON.parse(localStorage.getItem('cart')) || [];
+            const updatedCart = localCart.filter(item => item.id !== itemid);
+            console.log("called" , updatedCart)
+            localStorage.setItem('cart', JSON.stringify(updatedCart));
+            dispatch({ type: 'DELETE_ITEM', payload: { itemid } });
         }
     };
+    //Clear All Product
+    const clearCart = async () => {
+        if (id) {
+            try {
+                await DataService.DeleteAllItemsFromCart(saasId, storeId, id);
+                dispatch({ type: 'SET_CART', payload: [] });
+            } catch (error) {
+                console.error('Failed to clear cart:', error);
+            }
+        } else {
+            ClearLocalCart()
+        }
+    };
+    
+    const ClearLocalCart = ()=>{
+        localStorage.removeItem('cart');
+        dispatch({ type: 'SET_CART', payload: [] });
+    }
 
     useEffect(() => {
-        if(id){
+        // if(id){
             getCart()
-        }
+        // }
     }, [])
     
 
     return (
-        <CartContext.Provider value={{ cart: state.cart, addItem, editItem, deleteItem ,getCart,clearCart}}>
+        <CartContext.Provider value={{ cart: state.cart, addItem, editItem, deleteItem ,getCart,clearCart,ClearLocalCart}}>
             {children}
         </CartContext.Provider>
     );

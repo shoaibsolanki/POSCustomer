@@ -3,8 +3,10 @@ import DataService from "../services/requestApi";
 import { useAuth } from "../Context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Alert, CircularProgress, Snackbar } from "@mui/material";
+import { useCart } from "../Context/CartContext";
 const Login = () => {
   const { login } = useAuth();
+  const {ClearLocalCart} = useCart()
   const navigate = useNavigate();
   const [isloading , setIsLoading] = useState(false)
   const [snackbar, setSnackbar] = useState({
@@ -52,6 +54,7 @@ const handleSubmit = async (e) => {
                 login(user, token);
                 navigate('/landing');
                 setIsLoading(false)
+                ClearLocalCart()
             }
         } else {
             setIsLoading(false)

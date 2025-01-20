@@ -8,6 +8,7 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [selectedsubcat, setSelectedsubCat] = useState("");
   const navigate = useNavigate()
+  const [isPaymentSuccessful, setIsPaymentSuccessful] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState( JSON.parse(localStorage.getItem("authData")));
   const [authData, setAuthData] = useState(() => {
     const storedAuthData = JSON.parse(localStorage.getItem("authData"));
@@ -19,7 +20,7 @@ export const AuthProvider = ({ children }) => {
   });
   const [allOrders, setAllOrders] = useState([]); 
   const [store, setStores] = useState([]);
-  const [address, setAddress] = useState({
+  const [getaddress, setAddress] = useState({
     postalCode: null,
     route: null,
     town: null,
@@ -48,6 +49,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = (data, token) => {
     setAuthData(data);
+    setIsAuthenticated(data)
     localStorage.setItem("authData", JSON.stringify(data));
     localStorage.setItem("authToken", token);
   };
@@ -199,7 +201,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
   // console.log(allOrders);
-  const { id } = authData;
+  const id = authData?.id;
   useEffect(() => {
     if(id){
       getOrderHistory(storeId , saasId, id);
@@ -226,10 +228,12 @@ export const AuthProvider = ({ children }) => {
         login,
         logout,
         getLocation,
-        address,
+        location,
+        getaddress,
         authData,
         getOrderHistory,
-        allOrders
+        allOrders,
+        setIsPaymentSuccessful
       }}
     >
       {children}

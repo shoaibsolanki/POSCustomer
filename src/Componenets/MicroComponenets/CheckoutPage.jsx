@@ -3,7 +3,7 @@ import { useCart } from "../../Context/CartContext";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import DataService from "../../services/http-Pos";
+import DataService from "../../services/requestApi";
 import { BASEURL } from "../../services/http-Pos";
 import { useNavigate } from "react-router-dom";
 import Snackbar from "@mui/material/Snackbar";
@@ -24,17 +24,19 @@ const CheckoutPage = () => {
     getaddress,
     getLocationAndOpenMaps
   } = useAuth();
-  const { cart, totalPrice, clearCart, totalPricePlusDeliveryCharge } =
+  const { cart, clearCart, totalPricePlusDeliveryCharge ,ClearLocalCart} =
     useCart();
-
-  const TotalOrderQeuntity =cart && cart?.reduce((total, item) => {
+const totalPrice = cart && cart?.reduce((total, product) => {
+    return total + product.price * product.product_qty;
+  }, 0)
+const TotalOrderQeuntity = cart && cart.reduce((total, item) => {
     return total + item.product_qty;
-  }, 0);
+}, 0);
   const navigate = useNavigate();
   const { id,  mobileNumber, name } = authData;
   const selectedStore = localStorage.getItem('selectedStore');
   const parsedStore = selectedStore ? JSON.parse(selectedStore) : null;
-  const { saasId, storeId,store_logo,store_name,address,phone_no,country} = parsedStore || {};
+  const { saasId, storeId,store_logo,store_name,address,phone_no,country ,key_id} = parsedStore || {};
   const [billingAddress, setBillingAddress] = useState(false);
   const [savedAddresses, setSavedAddresses] = useState([]);
   const [showNewAddressForm, setShowNewAddressForm] = useState(false);
@@ -95,11 +97,11 @@ const CheckoutPage = () => {
       };
 
       const authHeader = `Basic ${btoa(
-        "rzp_test_USk6kNFvt2WXOE:afZsDDDaTvqhZPxMLH1p0b2t"
+        "rzp_live_CJwPNN6lM1QV1v:7NMwsWRrzZqXPo9k78fEz7hf"
       )}`;
 
       const response = await axios.post(
-        `${BASEURL.ENDPOINT_URL}rezar/pay/${data.amount}`,
+        `${BASEURL.ENDPOINT_URL}rezar/pay/${Math.floor(data.amount)}/${storeId}`,
         data,
         {
           headers: {
@@ -109,8 +111,7 @@ const CheckoutPage = () => {
         }
       );
 
-      console.log("Razorpay order created:", response.data);
-      return response.data.id;
+      return response.data;
     } catch (error) {
       console.error("Error creating Razorpay order:", error);
       throw error;
@@ -119,37 +120,45 @@ const CheckoutPage = () => {
 
   const handleRazorpayPayment = async (formData) => {
     try {
-      const orderId = await createRazorpayOrder();
-      const options = {
-        key: "rzp_test_USk6kNFvt2WXOE",
-        amount: totalPrice ,
-        currency: "INR",
-        name: "Food4You",
-        description: "Test Transaction",
-        image: "",
-        order_id: orderId,
-        handler: async function (response) {
-          console.log(response);
-          await handlePlaceOrder(formData, response);
-          setIsPaymentSuccessful(true);
-          clearCart();
-          navigate("/cart/checkout/summary");
-        },
-        prefill: {
-          name: `${formData.first_name} ${formData.last_name}`,
-          email: formData.email,
-          contact: formData.Mobile_numbers,
-        },
-        notes: {
-          address: formData["Street Address"],
-        },
-        theme: {
-          color: "#003f62",
-        },
-      };
-
-      const rzp1 = new window.Razorpay(options);
-      rzp1.open();
+      const res = await createRazorpayOrder(); // Ensure this function works correctly
+      console.log("Response from createRazorpayOrder:", res);
+  
+      if (res.status === "created") {
+        const options = {
+          key: key_id || "rzp_test_USk6kNFvt2WXOE",
+          amount: res.amount, // Amount in paise
+          currency: "INR",
+          name: "Food4You",
+          receipt: "receipt_id_123",
+          payment_capture: 1,
+          description: "Test Transaction",
+          image: "", // Add a valid image URL if needed
+          order_id: res.id, // Ensure this is valid
+          handler: async function (response) {
+            console.log("Payment handler response:", response);
+            await handlePlaceOrder(formData, response);
+            setIsPaymentSuccessful(true);
+            clearCart();
+            navigate("/cart/checkout/summary");
+          },
+          prefill: {
+            name: `${formData.first_name} ${formData.last_name}`,
+            email: formData.email,
+            contact: formData.Mobile_numbers,
+          },
+          notes: {
+            address: formData["Street Address"],
+          },
+          theme: {
+            color: "#003f62",
+          },
+        };
+  
+        console.log("Razorpay options:", options);
+  
+        const rzp1 = new window.Razorpay(options);
+        rzp1.open();
+      }
     } catch (error) {
       console.error("Error handling Razorpay payment:", error);
     }
@@ -164,6 +173,15 @@ const CheckoutPage = () => {
   };
 
   const onSubmit = async (data) => {
+    if(!data.address_id ){
+      console.log(data.address_id);
+       setSnackbar({
+        open: true,
+        message: "Please select an address",
+        severity: "error",
+      });
+      return;
+    }
       handleRazorpayPayment(data);
   };
   
@@ -193,8 +211,8 @@ const CheckoutPage = () => {
         customer_id: id,
         customer_name: name,
         mobile_number: mobileNumber,
-        saas_id: saas_id,
-        store_id: store_id,
+        saas_id: saasId,
+        store_id: storeId,
         order_tax: 0,
         order_value: totalPrice,
         order_discount: 0,
@@ -470,8 +488,8 @@ const CheckoutPage = () => {
           email:email,
           name: `${data.first_name} ${data.last_name}`,
           card_number: Math.ceil(Math.random() * 10000),
-          store_id: store_id,
-          saas_id: saas_id,
+          store_id: storeId,
+          saas_id: saasId,
           city: "city",
           state: "state",
           country: "India",
@@ -525,7 +543,7 @@ const CheckoutPage = () => {
           password: password,
         }
       );
-      const redirectUrl = sessionStorage.getItem("redirectAfterLogin");
+    //   const redirectUrl = sessionStorage.getItem("redirectAfterLogin");
       if (response.data.status) {
         setIsLoading(false);
         const token = response.data.data.jwt_response;
@@ -539,12 +557,11 @@ const CheckoutPage = () => {
 
         if (token && user) {
           login(user, token);
-          if (redirectUrl) {
             setTimeout(() => {
-              sessionStorage.removeItem("redirectAfterLogin");
-              navigate(redirectUrl);
+              navigate('/');
+              ClearLocalCart()
             }, 1000);
-          }
+          
         }
       } else {
         setIsLoading(false);

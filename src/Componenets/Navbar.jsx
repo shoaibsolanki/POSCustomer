@@ -63,7 +63,7 @@ const Navbar = ({ search, setSearch, data }) => {
           <div className="max-md:w-full flex gap-8 items-center">
             <Link to={`${location.pathname=='/'?"/landing":"/"}`}>
             <b className="text-black text-2xl">
-            Food4You
+            Omni Store
             </b>
               {/* <img
                 src={logoImg}
