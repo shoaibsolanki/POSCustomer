@@ -2,7 +2,7 @@ import React from 'react';
 const RestaurantCard = ({store,onClick,name,address}) => {
   return (
     <div onClick={()=>onClick(store)} className="cursor-pointer max-w-sm bg-white rounded-lg shadow-lg overflow-hidden">
-      <img className="w-full h-48 object-cover" src={store.storeLogo} alt="Restaurant" />
+      <img className="w-full h-48 object-cover" src={store.storeLogo} alt="" />
       <div className="p-4">
         <div className="flex justify-between items-center">
           <h5 className="text-lg font-bold">{name}</h5>

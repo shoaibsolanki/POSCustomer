@@ -46,6 +46,7 @@ function LogoutModal() {
         <Fade in={open}>
           <Box sx={style}>
             <Typography
+            className="text-black"
               id="transition-modal-title"
               variant="h6"
               component="h2"

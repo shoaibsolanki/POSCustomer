@@ -85,16 +85,16 @@ const Landingpage = () => {
   };
   const handleStorebyPin = async () => {
     try {
-        if (!type) {
-            setSnackbar({
-              open: true,
-              message: "Please select a type",
-              severity: "error",
-            });
-            return;
-          }
+        // if (!type) {
+        //     setSnackbar({
+        //       open: true,
+        //       message: "Please select a type",
+        //       severity: "error",
+        //     });
+        //     return;
+        //   }
 
-        const response = await DataService.GetStoreByPinCode(getaddress?.postalCode,type);
+        const response = await DataService.GetStoreByPinCode(getaddress?.postalCode);
       console.log(response);
       if(response.data.data.length > 0){
         setStores(response.data.data)
@@ -138,8 +138,8 @@ return (
         <div className="relative flex flex-col items-center justify-center h-full text-white">
             <img src={logo} alt="Food 4 You Logo" className="mb-8" />
             {/* <div style={{ backgroundColor: 'black', padding: '20px', minHeight: '100vh' }}> */}
-            <h1 className="text-3xl font-bold mb-4">Select Store</h1>
-      <FormControl className="w-[380px]">
+            {/* <h1 className="text-3xl font-bold mb-4">Select Store</h1> */}
+      {/* <FormControl className="w-[380px]">
         <InputLabel
           id="demo-simple-select-label"
           sx={{ color: 'black' }} // Label text color
@@ -188,9 +188,9 @@ return (
           SALOON
           </MenuItem>
         </Select>
-      </FormControl>
+      </FormControl> */}
     {/* </div> */}
-            <h1 className="text-3xl font-bold mb-4">Order delivery near you</h1>
+            <h1 className="text-3xl font-bold mb-4">Discover Store Near You</h1>
             <div className="w-full max-w-md px-4 flex justify-center ">
                 <button
                     onClick={() => GetCurrentaddress()}

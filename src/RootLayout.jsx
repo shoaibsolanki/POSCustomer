@@ -10,11 +10,11 @@ const RootLayout = ({ children }) => {
     location.pathname === "/login" || location.pathname === "/Signup" || location.pathname === "/landing";
 
     return (
-        <div className="root-layout">
+        <div className="root-layout bg-white">
             <nav className="navbar">
             {!isAuthPage && <Navbar />}
             </nav>
-            <main className="content">
+            <main className="content bg-white">
                 {children}
             </main>
             {!isAuthPage && <Footer />}

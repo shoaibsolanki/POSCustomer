@@ -42,7 +42,7 @@ const CartItem = ({
           />
         </Grid>
         <Grid item xs={4}>
-          <Typography variant="subtitle1" fontWeight="bold">
+          <Typography className="text-black" variant="subtitle1" fontWeight="bold">
             {isAuthenticated ? item?.itemName?.slice(0, 30) : item.item_name}
           </Typography>
         </Grid>
@@ -56,14 +56,14 @@ const CartItem = ({
             <IconButton onClick={() => editItem(item.product_qty -1, item.id)}>
               <Remove />
             </IconButton>
-            <Typography variant="body1">{item.product_qty}</Typography>
+            <Typography className="text-black" variant="body1">{item.product_qty}</Typography>
             <IconButton onClick={() => editItem(item.product_qty +1, item.id)}>
               <Add />
             </IconButton>
           </Box>
         </Grid>
         <Grid item xs={1}>
-          <Typography className="fw-bold" variant="body1">
+          <Typography className="fw-bold text-black" variant="body1">
             {bankAccount}{item.price * item.product_qty}
           </Typography>
         </Grid>
@@ -93,7 +93,7 @@ const CartItem = ({
 
           {/* Item Name and Delete Button */}
           <div className="flex-1 flex flex-col ml-2">
-            <b className="text-sm leading-tight">
+            <b className="text-sm leading-tight text-black">
               {isAuthenticated
                 ? item?.itemName?.slice(0, 25) + (item?.itemName?.length > 25 ? '...' : '')
                 : item.item_name?.slice(0, 25) + (item.item_name?.length > 25 ? '...' : '')}
@@ -114,13 +114,13 @@ const CartItem = ({
             <IconButton size="small"  onClick={() => editItem(item.product_qty -1, item.id)}>
               <Remove fontSize="small" />
             </IconButton>
-            <Typography variant="body2">{item.product_qty}</Typography>
+            <Typography className="text-black" variant="body2">{item.product_qty}</Typography>
             <IconButton size="small"  onClick={() => editItem(item.product_qty +1, item.id)}>
               <Add fontSize="small" />
             </IconButton>
           </div>
           <div>
-            <Typography className="text-sm font-bold">
+            <Typography className="text-sm font-bold text-black">
              {bankAccount} {item.price * item.product_qty}
             </Typography>
           </div>

@@ -43,7 +43,7 @@ const Profile = () => {
   }
 
   return (
-    <div className="w-full relative bg-white1 flex flex-col items-center justify-start py-20 px-5 box-border gap-[80px] leading-[normal] tracking-[normal] text-left text-35xl text-black font-headline-3 mq750:gap-[20px] mq1125:gap-[40px]">
+    <div className="w-full relative bg-white1 flex flex-col items-center justify-start py-3 px-5 box-border gap-[80px] leading-[normal] tracking-[normal] text-left text-35xl text-black font-headline-3 mq750:gap-[20px] mq1125:gap-[40px]">
       <div className="w-[1120px] flex flex-row items-start justify-center max-w-full">
         <h1 className="text-4xl m-0 relative text-inherit tracking-[-1px] leading-[58px] font-medium font-inherit mq450:text-[32px] mq450:leading-[35px] mq1050:text-[43px] mq1050:leading-[46px]">
           My Account

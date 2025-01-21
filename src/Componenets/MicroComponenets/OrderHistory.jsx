@@ -15,12 +15,13 @@ const Orders = ({ className = "" }) => {
   const { allOrders, getOrderHistory ,authData,getLocationAndOpenMaps} = useAuth();
   const selectedStore = localStorage.getItem('selectedStore');
   const parsedStore = selectedStore ? JSON.parse(selectedStore) : null;
-  const { store_logo,store_name,address,phone_no} = parsedStore || {};
+  const {saasId, storeId, store_logo,store_name,address,phone_no} = parsedStore || {};
   const itemsPerPage = 3;
   const [currentPage, setCurrentPage] = useState(1);
-  const { id, saasId, storeId, mobileNumber, name } = authData;
+  const { id,  mobileNumber, name } = authData;
   const totalPages = Math.ceil(allOrders?.length / itemsPerPage);
   const [copied, setCopied] = useState(false)
+  const [orderDetails, setOrderDetails] = useState([])
   const [Downloading, setDownloading] = useState(false)
     const copyToClipboard = () => {
       navigator.clipboard.writeText(phone_no)
@@ -104,6 +105,15 @@ const Orders = ({ className = "" }) => {
       console.error("Error occurred while fetching the PDF:", error);
     }
   };
+
+  const GetOrderDetail = async (storeId, saasId, orderId)=>{
+    try {
+      const res = await DataService.GetOrderDetail(storeId, saasId, orderId)
+      setOrderDetails(res.data.data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
   
   
   return (
@@ -116,7 +126,8 @@ const Orders = ({ className = "" }) => {
             {currentOrders?.map((order, index) => (
               <section
                 key={index}
-                className="bg-white shadow-md rounded-lg p-4 border border-gray-200"
+                className="bg-white shadow-md rounded-lg p-4 border border-gray-200 cursor-pointer"
+                onClick={()=>{GetOrderDetail(order.store_id, order.saas_id, order.order_id)}}
               >
                 {order?.order_type == "Pickup" && <>
                 <div className="relative h-48 sm:h-64 md:h-80 lg:h-96 rounded-lg overflow-hidden mb-6">
@@ -165,28 +176,29 @@ const Orders = ({ className = "" }) => {
                     Status:{" "}
                     <span
                       className={`text-sm text-white font-semibold py-[4px] px-[8px] rounded-lg ${
-                        order.status === "pending" ? "bg-red-400" : "bg-green-400"
+                        order.status === "PENDING" ? "bg-red-400" : "bg-green-400"
                       }`}
                     >
-                      {order.status}
+                      {order.status === "delivered"?"DELIVERED":order.status}
                     </span>
                     {/* <div className="text-sm text-gray-600 mt-2">
                       
                      {!Downloading ?  <Button disabled={Downloading} onClick={()=>getDonloadpdf(order?.order_id)} variant="outlined" className="p-0">Download</Button>
                      : <CircularProgress />}
                     </div> */}
-                  </div>
-                    
+                  </div> 
                 </div>
+                    {/* {orderDetails.length == 0 &&<p onClick={()=>{GetOrderDetail(order.store_id, order.saas_id, order.order_id)}} className="text-sm text-gray-600 mt-2 flex justify-between items-center cursor-pointer">more...</p>} */}
                 <div className="flex flex-col">
-                  {order?.order_details?.map((item, idx) => (
+                  {orderDetails?.map((item, idx) => (
+                    item.order_id == order.order_id?
                     <Item
                       key={idx}
                       index={idx + 1}
                       name={item.item_name}
                       price={item.item_price}
                       quantity={item.item_qty}
-                    />
+                    />:""
                   ))}
                 </div>
               </section>

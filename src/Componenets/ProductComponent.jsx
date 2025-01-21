@@ -103,20 +103,20 @@ const ProductComponent = ({ flex_direction, data }) => {
                     height:"9rem"
                    }}
                    src={`${BASEURL.ENDPOINT_URL}item/get-image/${data?.item_id}`} alt={data?.item_name}/>
-                  <button className="absolute top-2 right-2 bg-white rounded-full p-2 shadow-md">
+                  {/* <button className="absolute top-2 right-2 bg-white rounded-full p-2 shadow-md">
                     <svg className="w-6 h-6 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M3.172 5.172a4 4 0 011.414-2.828A4 4 0 017.172 2h.008a4 4 0 012.828 1.172L10 3.414l.992-.992a4 4 0 015.656 5.656L10 17.656l-6.656-6.656a4 4 0 01-.172-5.828z" />
                     </svg>
-                  </button>
+                  </button> */}
                 </div>
                 <div className="p-4">
-                <h2 className="product-title text-primary">
+                <h2 className="product-title text-primary text-start">
               {data?.item_name?.length > 30
                 ? `${data?.item_name?.slice(0, 30)}...`
                 : data?.item_name}
             </h2>
                   <div className="flex items-baseline">
-                  <p className="priceTitle">{bankAccount} {data?.price}/-</p>
+                  <p className="priceTitle text-black">{bankAccount} {data?.price}/-</p>
                     {/* <p className="text-sm text-gray-500 line-through ml-2">Rs 399</p> */}
                   </div>
                   {/* <span className="text-green-500 font-semibold text-sm">20% OFF</span> */}
@@ -124,10 +124,10 @@ const ProductComponent = ({ flex_direction, data }) => {
                     Hyderabadi biryani is a style of biryani originating from Hyderabad, India made with basmati rice and meat.
                   </p> */}
                   <div className="flex items-center mt-2">
-                    <svg className="w-4 h-4 text-yellow-500 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                    {/* <svg className="w-4 h-4 text-yellow-500 mr-1" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M9.049 2.927C9.28 2.34 9.97 2.34 10.201 2.927l1.175 3.036a1 1 0 00.95.675h3.24c.707 0 1.002.91.429 1.364l-2.62 2.038a1 1 0 00-.304 1.118l1.175 3.036c.231.587-.476 1.075-.95.675L10 12.347l-2.62 2.038c-.475.4-1.181-.088-.95-.675l1.175-3.036a1 1 0 00-.304-1.118L4.68 7.675c-.573-.454-.278-1.364.429-1.364h3.24a1 1 0 00.95-.675L9.049 2.927z" />
-                    </svg>
-                    <p className="text-gray-600 font-semibold">5.0 {data?.category}</p>
+                    </svg> */}
+                    <p className="text-gray-600 font-semibold">{data?.category}</p>
                   </div>
                   <AddToCartButton item={data} />
                   {/* <button className="mt-4 w-full bg-blue-500 text-white py-2 px-4 rounded-md">ADD CART</button> */}

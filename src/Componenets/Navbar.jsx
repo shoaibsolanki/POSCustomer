@@ -82,7 +82,7 @@ const Navbar = ({ search, setSearch, data }) => {
               className="flex items-center gap-2"
               onClick={handleProceedToProfile}
             >
-              <div className="flex gap-2 items-center text-black">
+              <div className="flex gap-2 items-center bg-white text-black">
                 <PersonIcon className="h-6 w-6" />
                 {" "}
                 <p className="hidden xl:block text-sm md:text-xl">

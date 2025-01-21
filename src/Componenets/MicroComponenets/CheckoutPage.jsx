@@ -665,7 +665,7 @@ const TotalOrderQeuntity = cart && cart.reduce((total, item) => {
                   type="text"
                   id="firstName"
                   placeholder="First name"
-                  className="bg-white mt-1 p-2 border border-gray-300 rounded-md w-full"
+                  className="bg-white mt-1 p-2 border border-gray-300 rounded-md w-full text-black"
                 />
                 {errors.first_name && <span>This field is required</span>}
               </div>
@@ -678,7 +678,7 @@ const TotalOrderQeuntity = cart && cart.reduce((total, item) => {
                   type="text"
                   id="lastName"
                   placeholder="Last name"
-                  className="bg-white mt-1 p-2 border border-gray-300 rounded-md w-full"
+                  className="bg-white mt-1 p-2 border border-gray-300 rounded-md w-full text-black"
                 />
                 {errors.last_name && <span>This field is required</span>}
               </div>
@@ -691,7 +691,7 @@ const TotalOrderQeuntity = cart && cart.reduce((total, item) => {
                   type="email"
                   id="phoneNumber"
                   placeholder="Enter email"
-                  className="bg-white mt-1 p-2 border border-gray-300 rounded-md w-full"
+                  className="bg-white mt-1 p-2 border border-gray-300 rounded-md w-full text-black"
                 />
                 {errors.email && <span>This field is required</span>}
               </div>
@@ -704,7 +704,7 @@ const TotalOrderQeuntity = cart && cart.reduce((total, item) => {
                   type="number"
                   id="mobile_number"
                   placeholder="Enter your mobile number"
-                  className="bg-white mt-1 p-2 border border-gray-300 rounded-md w-full"
+                  className="bg-white mt-1 p-2 border border-gray-300 rounded-md w-full text-black"
                 />
                 {errors.mobile_number && <span>This field is required</span>}
               </div>
@@ -733,7 +733,7 @@ const TotalOrderQeuntity = cart && cart.reduce((total, item) => {
                   type="text"
                   id="otp"
                   placeholder="OTP"
-                  className="bg-white mt-1 p-2 border border-gray-300 rounded-md w-full"
+                  className="bg-white mt-1 p-2 border border-gray-300 rounded-md w-full text-black"
                 />
                 {errors.otp && <span>This field is required</span>}
               </div>
@@ -761,7 +761,7 @@ const TotalOrderQeuntity = cart && cart.reduce((total, item) => {
                   type="password"
                   id="password"
                   placeholder="Password"
-                  className="bg-white mt-1 p-2 border border-gray-300 rounded-md w-full"
+                  className="bg-white mt-1 p-2 border border-gray-300 rounded-md w-full text-black"
                 />
                 {errors.password && <span>This field is required</span>}
               </div>
@@ -777,7 +777,7 @@ const TotalOrderQeuntity = cart && cart.reduce((total, item) => {
                   type="password"
                   id="confirmPassword"
                   placeholder="Confirm Password"
-                  className="bg-white mt-1 p-2 border border-gray-300 rounded-md w-full"
+                  className="bg-white mt-1 p-2 border border-gray-300 rounded-md w-full text-black"
                 />
                 {errors.confirmPassword && <span>This field is required</span>}
               </div>
@@ -829,7 +829,7 @@ const TotalOrderQeuntity = cart && cart.reduce((total, item) => {
                   type="text"
                   id="streetAddress"
                   placeholder="Street Address"
-                  className="bg-white mt-1 p-2 border border-gray-300 rounded-md w-full "
+                  className="bg-white mt-1 p-2 border border-gray-300 rounded-md w-full text-black"
                 />
                 {errors.street && <span>This field is required</span>}
               </div>
@@ -843,7 +843,7 @@ const TotalOrderQeuntity = cart && cart.reduce((total, item) => {
                   type="text"
                   id="city"
                   placeholder="Town / City"
-                  className="bg-white mt-1 p-2 border border-gray-300 rounded-md w-full"
+                  className="bg-white mt-1 p-2 border border-gray-300 rounded-md w-full text-black"
                 />
                 {errors.city && <span>This field is required</span>}
               </div>
@@ -854,7 +854,7 @@ const TotalOrderQeuntity = cart && cart.reduce((total, item) => {
                 <select
                   {...register("state", { required: true })}
                   id="state"
-                  className="bg-white mt-1 p-2 border border-gray-300 rounded-md w-full"
+                  className="bg-white mt-1 p-2 border border-gray-300 rounded-md w-full text-black"
                 >
                   <option value="">Select your {country =="India"?"State":"Province"}</option>
                   {states.map((state, index) => (
@@ -878,7 +878,7 @@ const TotalOrderQeuntity = cart && cart.reduce((total, item) => {
                   type="number"
                   id="zipCode"
                   placeholder="Postal Code"
-                  className="bg-white mt-1 p-2 border border-gray-300 rounded-md w-full"
+                  className="bg-white mt-1 p-2 border border-gray-300 rounded-md w-full text-black"
                 />
                 {errors.zipcode && <span>This field is required</span>}
               </div>

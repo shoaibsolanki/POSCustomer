@@ -96,8 +96,11 @@ class DataService {
   GetDowloaPdf(saasid,storeId,orderId){
     return https.get(`order/get-order-details-list/${saasid}/${storeId}/${orderId}`)
   }
-  GetStoreByPinCode(pincode,type){
-    return https.get(`/auth/getstoreBypincodeType/${pincode}/${type}`)
+  GetStoreByPinCode(pincode){
+    return https.get(`/auth/getstoreBypincode/${pincode}`)
+  }
+  GetOrderDetail(storeId, saasId, orderId){
+    return https.get(`/order/view-order-detail-web/${storeId}/${saasId}/${orderId}`)
   }
 }
 export default new DataService();

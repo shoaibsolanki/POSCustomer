@@ -112,7 +112,7 @@ const HorizontalCategoryList = () => {
                 className="mt-2 text-lg font-semibold cursor-pointer p-3 rounded"
                 style={{
                   background: selectedsubcat == category.category ? "#003f62" : "",
-                  color: selectedsubcat == category.category ? "#fff" : "",
+                  color: selectedsubcat == category.category ? "#fff" : "black",
                 }}
                 onClick={()=>{setSelectedsubCat(category.category);
                     setPage(1)

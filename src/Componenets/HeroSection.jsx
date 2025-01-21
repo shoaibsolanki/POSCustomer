@@ -11,7 +11,7 @@ const HeroSection = ({ data }) => {
   const { store_name,storeLogo,address} = parsedStore || {};
 
   return (<>
-    <div  className="relative h-48 sm:h-64 md:h-80 lg:h-96 rounded-lg overflow-hidden mb-6">
+    { storeLogo &&<div  className="relative h-48 sm:h-64 md:h-80 lg:h-96 rounded-lg overflow-hidden mb-6">
       {/* {isLoading && <ImageSkeleton />} */}
       {/* <div  className="sm:w-[1300px] sm:py-16 min-w-[350px] p-6 rounded-lg shadow-lg text-center"> */}
     <img
@@ -28,7 +28,7 @@ const HeroSection = ({ data }) => {
     <span>Indian</span> <br />
     <span>{address}</span>
   </div>
-    </div>
+    </div>}
     </>
   );
 };

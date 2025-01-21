@@ -52,7 +52,13 @@ const getCart = async () => {
         try {
             const response = await DataService.GetCartItems(saasId, storeId, id);
             const data = response.data.data.products;
-            dispatch({ type: 'SET_CART', payload: data });
+            const updatedData = data.map(item => ({
+                ...item,
+                saas_id: item.saasId,
+                store_id: item.storeId,
+                item_name:item.itemName
+            }));
+            dispatch({ type: 'SET_CART', payload: updatedData });
         } catch (error) {
             console.error('Failed to fetch cart:', error);
         }
