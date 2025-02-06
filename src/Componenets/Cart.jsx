@@ -321,7 +321,7 @@ const Cart = () => {
 
   if (cart?.length === 0) {
     return (
-      <div className="flex items-center justify-center p-8 flex-col text-center">
+      <div className="flex items-center justify-center p-8 flex-col text-center min-h-screen">
         {/* <img height={200} width={200} alt="empty_cart" src={emptyCart} /> */}
         <h2 className="text-4xl font-semibold text-primary">
           Your cart is empty

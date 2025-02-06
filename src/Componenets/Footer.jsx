@@ -4,19 +4,19 @@ import React from 'react'
 const Footer = () => {
   const selectedStore = localStorage.getItem('selectedStore');
   const parsedStore = selectedStore ? JSON.parse(selectedStore) : null;
-  const {saasId, storeId, store_logo,store_name,address,phoneNo} = parsedStore || {};
+  const {saasId, storeId, store_logo,storeName,email,address,phoneNo} = parsedStore || {};
   return (
-    <footer className="bg-background text-foreground p-6 bg-slate-300">
+    <footer className="bg-background text-foreground p-6 bg-slate-600">
       <div className="text-start mb-4">
-        <h1 className="text-2xl font-bold">OMNI Stores.</h1>
-        <p className="text-muted-foreground">
-          {/* {address} */}
+        <h1 className="text-2xl font-bold text-white">{storeName || 'OMNI Stores'}</h1>
+        <p className="text-white">
+          {address && address}
         </p>
       </div>
       <div className="text-start mb-4">
-        <h2 className="text-lg font-semibold">Contact</h2>
-        <p className="text-muted-foreground">{phoneNo}</p>
-        {/* <p className="text-muted-foreground">{email}</p> */}
+        <h2 className="text-lg font-semibold text-white">Contact</h2>
+        <p className="text-muted-foreground text-white">{phoneNo}</p>
+        <p className="text-white-foreground">{email && email}</p>
       </div>
       {/* <div className="mb-4">
         <input
@@ -44,7 +44,7 @@ const Footer = () => {
         <WhatsApp className="text-green-500" />{" "}
         </a>
       </div>
-      <div className="text-center mt-4 text-muted-foreground">
+      <div className="text-center mt-4 text-muted-foreground text-white">
         <p>© 2024 Photon Software. All rights Reserved</p>
       </div>
     </footer>

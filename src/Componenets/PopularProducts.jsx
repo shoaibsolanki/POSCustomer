@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useAuth } from '../Context/AuthContext';
 import ProductComponent from './ProductComponent';
-
+import DataService from '../services/requestApi'
 const PopularProducts = () => {
   const { hasMore, products, DataByCatogory, setProducts, setHasMore ,page,setPage} = useAuth();
-  
-
+  const selectedStore = localStorage.getItem('selectedStore');
+  const parsedStore = selectedStore ? JSON.parse(selectedStore) : {};
+  const { saasId,storeId  } = parsedStore;
+  const [Uom , setUom] = useState([])
   // Function to fetch more data
   const fetchMoreData = async () => {
     try {
@@ -16,6 +18,20 @@ const PopularProducts = () => {
       console.error("Error fetching data:", error);
     }
   };
+
+  const getUom= async()=>{
+    try {
+      const res = await DataService.GetUomData(saasId,storeId)
+      console.log(res)
+      setUom(res.data.data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+ 
+  useEffect(() => {
+  getUom()
+  }, [])
 
   return (
     <>
@@ -45,13 +61,13 @@ const PopularProducts = () => {
           <h3 style={{ textAlign: 'center' }}>&#8593; Release to refresh</h3>
         }
       >
-        <div className="w-full mx-auto my-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {products.map((item, index) => (
-            <div key={index} className="inline-block">
-              <ProductComponent data={item} />
-            </div>
-          ))}
-        </div>
+        <div className="w-full mx-auto my-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+  {products.map((item, index) => (
+    <div key={index} className="inline-block">
+      <ProductComponent Uom={Uom} data={item} />
+    </div>
+  ))}
+</div>
       </InfiniteScroll>
     </>
   );

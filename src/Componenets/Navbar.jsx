@@ -12,7 +12,9 @@ const Navbar = ({ search, setSearch, data }) => {
   const navigate = useNavigate();
   const [userId, setUserId] = useState(null);
   const location = useLocation()
- 
+  const selectedStore = localStorage.getItem('selectedStore');
+  const parsedStore = selectedStore ? JSON.parse(selectedStore) : null;
+  const {storeName} = parsedStore || {};
   useEffect(() => {
     if (authData && authData.id) {
       setUserId(authData.id);
@@ -63,7 +65,7 @@ const Navbar = ({ search, setSearch, data }) => {
           <div className="max-md:w-full flex gap-8 items-center">
             <Link to={`${location.pathname=='/'?"/landing":"/"}`}>
             <b className="text-black text-2xl">
-            Omni Store
+            {storeName || 'OMNI Stores'}
             </b>
               {/* <img
                 src={logoImg}
@@ -79,7 +81,7 @@ const Navbar = ({ search, setSearch, data }) => {
           </div>
           <div className="flex gap-4 items-center mt-4 md:mt-0">
             <button
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 bg-white"
               onClick={handleProceedToProfile}
             >
               <div className="flex gap-2 items-center bg-white text-black">

@@ -24,10 +24,10 @@ const cartReducer = (state, action) => {
             };
         case 'EDIT_ITEM':
             return {
-                ...state,
-                cart: state.cart.map(item =>
-                    item.id === action.payload.id ? action.payload : item
-                )
+            ...state,
+            cart: state.cart.map(item => 
+                item.id === action.payload.id ? { ...item, product_qty: action.payload.product_qty } : item
+            )
             };
         case 'DELETE_ITEM':
             return {
@@ -107,15 +107,25 @@ const getCart = async () => {
 
         }
     };
-    const editItem = async (qty,itemid) => {
-        try {
-            const response = await DataService.UpdateCartitem(qty, saasId, storeId, id, itemid);
-            if (response.data.status) {
-                getCart();
-                // dispatch({ type: 'EDIT_ITEM', payload: item });
+    const editItem = async (qty, itemid) => {
+        if (id) {
+            try {
+                const response = await DataService.UpdateCartitem(qty, saasId, storeId, id, itemid);
+                if (response.data.status) {
+                    getCart();
+                    // dispatch({ type: 'EDIT_ITEM', payload: item });
+                }
+            } catch (error) {
+                console.error('Failed to update item:', error);
             }
-        } catch (error) {
-            console.error('Failed to update item:', error);
+        } else {
+            const localCart = JSON.parse(localStorage.getItem('cart')) || [];
+            const updatedCart = localCart.map(item => 
+                item.id === itemid ? { ...item, product_qty: qty } : item
+            );
+            console.log("called", updatedCart , itemid , qty)
+            localStorage.setItem('cart', JSON.stringify(updatedCart));
+            dispatch({ type: 'EDIT_ITEM', payload: { id: itemid, product_qty: qty } });
         }
     };
 

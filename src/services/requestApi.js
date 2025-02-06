@@ -102,5 +102,8 @@ class DataService {
   GetOrderDetail(storeId, saasId, orderId){
     return https.get(`/order/view-order-detail-web/${storeId}/${saasId}/${orderId}`)
   }
+  GetUomData(saasId, storeId){
+    return https.get(`/omni/get-uom/${saasId}/${storeId}`)
+  }
 }
 export default new DataService();

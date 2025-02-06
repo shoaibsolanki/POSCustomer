@@ -3,6 +3,7 @@ import DataService from "../services/requestApi";
 // import { useAuth } from "../contexts/AuthConext";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../Context/AuthContext";
+import { BASEURL } from "../services/http-Pos";
 
 const HorizontalCategoryList = () => {
     const {DataByCatogory,selectedsubcat,setSelectedsubCat , setPage} =useAuth()
@@ -73,12 +74,14 @@ const HorizontalCategoryList = () => {
       <div className="w-full mx-auto my-8 overflow-x-auto whitespace-nowrap">
         <div className="inline-flex space-x-4">
           {categories.map((category, index) => (
-            <div key={index} className="inline-block text-center w-fit">
-              {/* <img
-              className="w-24 h-24 object-cover rounded-full mx-auto"
-              src={category.image}
-              alt={category.name}
-            /> */}
+            <div onClick={() => {
+              setmasterSelected(category.masterCategoryId);
+            }} key={index} className="inline-block text-center w-fit">
+              <img
+              className="w-24 h-24 object-cover rounded-full mx-auto cursor-pointer"
+              src={`${BASEURL.ENDPOINT_URL}Master-category/get-master-image/${category.masterCategoryId}`}
+              // alt={category.name}
+            />
               <p
                 className="mt-2 text-lg font-semibold cursor-pointer p-3 rounded"
                 style={{
@@ -87,7 +90,7 @@ const HorizontalCategoryList = () => {
                       ? "#003f62"
                       : "",
                   color:
-                    selectedmaster == category.masterCategoryId ? "#fff" : "",
+                    selectedmaster == category.masterCategoryId ?  "#fff" : "black",
                 }}
                 onClick={() => {
                   setmasterSelected(category.masterCategoryId);
@@ -102,12 +105,14 @@ const HorizontalCategoryList = () => {
       <div className="w-full mx-auto my-8 overflow-x-auto whitespace-nowrap">
         <div className="inline-flex space-x-4">
           {subCatgory.map((category, index) => (
-            <div key={index} className="inline-block text-center w-fit">
-              {/* <img
-              className="w-24 h-24 object-cover rounded-full mx-auto"
-              src={category.image}
-              alt={category.name}
-            /> */}
+            <div onClick={()=>{setSelectedsubCat(category.category);
+              setPage(1)
+          }} key={index} className="inline-block text-center w-fit">
+              <img
+              className="w-24 h-24 object-cover rounded-full mx-auto cursor-pointer"
+              src={`${BASEURL.ENDPOINT_URL}category/get-category-image/${category.id}`}
+              // alt={category.name}
+            />
               <p
                 className="mt-2 text-lg font-semibold cursor-pointer p-3 rounded"
                 style={{

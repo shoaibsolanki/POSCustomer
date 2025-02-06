@@ -8,7 +8,7 @@ const RestaurantCard = ({store,onClick,name,address}) => {
           <h5 className="text-lg font-bold">{name}</h5>
           <div className="flex items-center">
             <span className="text-yellow-500 text-sm">★</span>
-            <span className="ml-1 text-sm font-bold">4.9</span>
+            <span className="ml-1 text-sm text-black font-bold">4.9</span>
           </div>
         </div>
         <div className="flex items-center text-gray-500 text-sm my-2">

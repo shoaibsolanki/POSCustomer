@@ -55,6 +55,13 @@ const handleSubmit = async (e) => {
                 navigate('/landing');
                 setIsLoading(false)
                 ClearLocalCart()
+              }else{
+                setIsLoading(false)
+                setSnackbar({
+                open: true,
+                message: "You are not allowed to login",
+                severity: "error",
+              });
             }
         } else {
             setIsLoading(false)
