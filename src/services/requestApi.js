@@ -29,7 +29,7 @@ class DataService {
   }
   AddItemsToCart(item, saasId, storeId, id) {
     return https.post(
-      `/price-check/addproduct/${saasId}/${storeId}/${id}`,
+      `/price-check/addvegetableproduct/${saasId}/${storeId}/${id}`,
       item
     );
   }
@@ -104,6 +104,9 @@ class DataService {
   }
   GetUomData(saasId, storeId){
     return https.get(`/omni/get-uom/${saasId}/${storeId}`)
+  }
+  SearchData(storeId, saasId, key){
+    return https.get(`/search/get-result/${storeId}/${saasId}/${key}`)
   }
 }
 export default new DataService();
