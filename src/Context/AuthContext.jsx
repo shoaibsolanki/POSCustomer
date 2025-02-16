@@ -233,7 +233,8 @@ export const AuthProvider = ({ children }) => {
         authData,
         getOrderHistory,
         allOrders,
-        setIsPaymentSuccessful
+        setIsPaymentSuccessful,
+        isPaymentSuccessful,
       }}
     >
       {children}

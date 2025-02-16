@@ -48,7 +48,7 @@ const CartItem = ({
         </Grid>
         <Grid item xs={2}>
           <Typography className="fw-bold" variant="body1">
-            {bankAccount} {item.price}
+            {bankAccount} {item.new_price * item.product_qty}
           </Typography>
         </Grid>
         <Grid item xs={2}>
@@ -64,7 +64,7 @@ const CartItem = ({
         </Grid>
         <Grid item xs={1}>
           <Typography className="fw-bold text-black" variant="body1">
-            {bankAccount}{item.price * item.product_qty}
+            {bankAccount}{item.new_price * item.product_qty}
           </Typography>
         </Grid>
         <Grid item xs={1}>
@@ -99,7 +99,7 @@ const CartItem = ({
                 : item.item_name?.slice(0, 25) + (item.item_name?.length > 25 ? '...' : '')}
             </b>
             <div className="text-xs text-gray-600">
-              {bankAccount} {item.price}
+              {bankAccount} {item.new_price * item.product_qty}
             </div>
           </div>
           
@@ -121,7 +121,7 @@ const CartItem = ({
           </div>
           <div>
             <Typography className="text-sm font-bold text-black">
-             {bankAccount} {item.price * item.product_qty}
+             {bankAccount} {item.new_price * item.product_qty}
             </Typography>
           </div>
         </div>
@@ -139,7 +139,7 @@ const Cart = () => {
     editItem
   } = useCart();
   const totalPrice = cart?.reduce((total, product) => {
-    return total + product.price * product.product_qty;
+    return total + product.new_price * product.product_qty;
   }, 0)
   const { authData, isAuthenticated } = useAuth();
   const { id, saasId, storeId } = authData;

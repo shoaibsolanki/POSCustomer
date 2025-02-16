@@ -27,7 +27,7 @@ const CheckoutPage = () => {
   const { cart, clearCart, totalPricePlusDeliveryCharge ,ClearLocalCart} =
     useCart();
 const totalPrice = cart && cart?.reduce((total, product) => {
-    return total + product.price * product.product_qty;
+    return total + product.new_price * product.product_qty;
   }, 0)
 const TotalOrderQeuntity = cart && cart.reduce((total, item) => {
     return total + item.product_qty;
@@ -378,7 +378,7 @@ const TotalOrderQeuntity = cart && cart.reduce((total, item) => {
       const checkCountry = country == "Canada"? data.email :data.mobile_number
       setEmail(checkCountry);
       const response = await axios.get(
-        `${BASEURL.ENDPOINT_URL}otp/resend-otp/${checkCountry}`
+        `${BASEURL.ENDPOINT_URL}otp/resend-otp/${checkCountry}/${storeId}`
       );
 
       if (response.data.status) {
@@ -625,7 +625,7 @@ const TotalOrderQeuntity = cart && cart.reduce((total, item) => {
           city: getaddress.town,
           state: getaddress.state,
           zipcode: getaddress.postalCode,
-          state: getaddress.Province,
+          // state: getaddress.Province,
           country: getaddress.country,
         })
       }

@@ -33,6 +33,32 @@ const PopularProducts = () => {
   getUom()
   }, [])
 
+
+    const [selectedUom, setSelectedUom] = useState("");
+  
+    const handleUomChange = (event , id) => {
+      const selectedValue = event.target.value;
+      setSelectedUom(selectedValue);
+      const updatedProducts = products.map((product) => {
+        if (product.item_id === id) {
+          return { ...product, selectedUom: selectedValue };
+        }
+        return product;
+      });
+      console.log( updatedProducts)
+      setProducts(updatedProducts);
+    };
+
+    const clearSelectedUom = (id) => {
+      const updatedProducts = products.map((product) => {
+        if (product.item_id === id) {
+          return { ...product, selectedUom: "" };
+        }
+        return product;
+      });
+      setProducts(updatedProducts);
+    };
+
   return (
     <>
       <InfiniteScroll
@@ -61,10 +87,10 @@ const PopularProducts = () => {
           <h3 style={{ textAlign: 'center' }}>&#8593; Release to refresh</h3>
         }
       >
-        <div className="w-full mx-auto my-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+        <div className="w-full mx-auto my-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4">
   {products.map((item, index) => (
     <div key={index} className="inline-block">
-      <ProductComponent Uom={Uom} data={item} />
+      <ProductComponent clearSelectedUom={clearSelectedUom} handleUomChange={handleUomChange} Uom={Uom} data={item} />
     </div>
   ))}
 </div>

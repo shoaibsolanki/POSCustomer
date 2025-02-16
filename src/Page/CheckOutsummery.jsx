@@ -88,17 +88,17 @@ const OrderComplete = ({ className = "" }) => {
                 </div> */}
               </div>
               <div className="flex flex-row items-center justify-center">
-                <div className="relative leading-[22px] font-semibold inline-block min-w-[36px]">
+                <div className="relative text-black leading-[22px] font-semibold inline-block min-w-[36px]">
                   Date:
                 </div>
               </div>
               <div className="flex flex-row items-center justify-center">
-                <div className="relative leading-[22px] font-semibold inline-block min-w-[38px]">
+                <div className="relative text-black leading-[22px] font-semibold inline-block min-w-[38px]">
                   Total:
                 </div>
               </div>
               <div className="flex flex-row items-center justify-center">
-                <div className="relative leading-[22px] font-semibold inline-block min-w-[120px]">
+                <div className="relative text-black leading-[22px] font-semibold inline-block min-w-[120px]">
                   Payment method:
                 </div>
               </div>
@@ -111,7 +111,7 @@ const OrderComplete = ({ className = "" }) => {
                 {formattedDate}
               </div>
               <div className="relative leading-[22px] font-semibold inline-block min-w-[69px] text-black">
-                $ {orderSummery?.data?.orderValue}
+                 {orderSummery?.data?.orderValue}
               </div>
               <div className="relative leading-[22px] font-semibold inline-block min-w-[78px] text-black">
                 Online Payment{" "}

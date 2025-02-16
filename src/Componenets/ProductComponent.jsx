@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import { BASEURL } from "../services/http-Pos";
 import AddToCartButton from "./AddToCartButton";
-const ProductComponent = ({ Uom, data }) => {
+import ClearIcon from '@mui/icons-material/Clear';
+import { useCart } from "../Context/CartContext";
+import { Image } from "antd";
+const ProductComponent = ({ clearSelectedUom ,handleUomChange, Uom, data }) => {
   const [isLoading, setIsLoading] = useState(true);
   const { bankAccount ,saasId,storeId  } = JSON.parse(localStorage.getItem("selectedStore"));
-
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 2000);
     return () => clearTimeout(timer);
   }, []);
-
+  const { deleteItem, cart } = useCart();
+  const AddedItem = Array.isArray(cart) ? cart.find((el) => el.item_id === data.item_id) : null
  
   
 
@@ -29,11 +31,17 @@ const ProductComponent = ({ Uom, data }) => {
     );
   }
 
+
+
+
+
+
   return (
     <div className="w-full sm:w-[18rem] bg-white shadow-lg rounded-lg overflow-hidden m-2 inline-block">
       <div className="relative">
-        <img
+        <Image
           className="w-full h-36 sm:h-40 bg-[#D6B6FA] object-cover"
+          style={{height:"9rem" , width:"100%"}}
           src={`${BASEURL.ENDPOINT_URL}item/get-image/${data?.item_id}`}
           alt={data?.item_name}
         />
@@ -42,20 +50,40 @@ const ProductComponent = ({ Uom, data }) => {
         <h2 className="product-title text-primary text-start text-sm sm:text-base">
           {data?.item_name?.length > 30 ? `${data?.item_name?.slice(0, 30)}...` : data?.item_name}
         </h2>
+        <div className="flex gap-3">
         <p className="priceTitle text-start text-black text-sm sm:text-base">
-          {bankAccount} {data?.price}/-
+          {bankAccount} { data.selectedUom ?data?.price * data.selectedUom: data?.price} /-
         </p>
+        <p  className=" line-through priceTitle text-start text-green-600 text-sm sm:text-base">
+          {data.actual_price}/-
+        </p>
+        </div>
         <p className="text-gray-600 text-start font-semibold text-sm sm:text-base">{data?.category}</p>
         <div className="flex flex-col sm:flex-row gap-3 justify-between items-center">
           <AddToCartButton item={data} />
-          <select className="w-32 border rounded h-10">
+          {data?.selectedUom?<>
+          <p className="text-gray-600 text-start font-semibold text-sm sm:text-base">
+            {data.selectedUom * 1000} gm 
+            <ClearIcon className="text-gray-600 cursor-pointer" onClick ={()=>{
+              if(AddedItem){
+                deleteItem(AddedItem.id)
+                clearSelectedUom(AddedItem.item_id)
+              }else{
+                clearSelectedUom(data.item_id)
+         
+              }
+            }}/>
+          </p> 
+          </> :
+          
+         (data.UOM == "W" &&<select value={data?.selectedUom} onChange={(e)=>{handleUomChange(e , data.item_id)}} className="w-32 border rounded h-10">
             <option>Select Unit</option>
             {Uom.map((unit, index) => (
-              <option key={index} value={unit.uomname}>
+              <option key={index} value={Number(unit.uomname) / 1000}>
                 {unit.uomname}
               </option>
             ))}
-          </select>
+          </select> )}
         </div>
       </div>
     </div>

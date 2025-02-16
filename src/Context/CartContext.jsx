@@ -77,8 +77,38 @@ const getCart = async () => {
     //     }
     // };
     const addItem = async (item) => {
+        console.log(item)
         if (id) {
-            const response = await DataService.AddItemsToCart(item, saasId, storeId, id);
+            const payload = {
+                item_id: item.item_id,
+                item_name: item.item_name,
+                category: item.category,
+                message: "This is an example cart item.",
+                itemCode: item.item_code || null,
+                sku: "SKU123", // Assuming SKU is static or fetched separately
+                description: item.description,
+                price: item.price,
+                mrp:  item.actual_price, // Default to actual price if MRP is missing
+                new_price: item.selectedUom? Number(item.price) * Number(item.selectedUom):item.price,
+                discount: item.discount,
+                status: item.status,
+                department: item.dept || "no departments",
+                saas_id: item.saas_id,
+                store_id: item.store_id,
+                promoId: item.promo_id,
+                item_quantity: item.product_qty,
+                gram: item.selectedUom ? `${parseFloat(item.selectedUom) * 1000}` : "1000", // Convert UOM to grams
+                hsnCode: item.hsn_code,
+                taxRate: item.tax_rate,
+                taxCode: item.tax_code,
+                taxPercent: item.tax_percent,
+                actual_price: item.actual_price
+            }
+             
+            // if (item.selectedUom) {
+            //     item.new_price = Number(item.price) * Number(item.selectedUom);
+            // }
+            const response = await DataService.AddItemsToCart(payload, saasId, storeId, id);
             console.log(response);
             if (response.data.status) {
                 getCart();
@@ -99,7 +129,8 @@ const getCart = async () => {
                 // getCart();
             } else {
                 // Item does not exist in the cart, add new item with unique id
-                const newItem = { ...item, id: Date.now() };
+                const newItem = { ...item, id: Date.now(), new_price :item.selectedUom ?(Number(item.price) * Number(item.selectedUom)):item.price };
+                console.log(newItem)
                 localCart.push(newItem);
                 dispatch({ type: 'ADD_ITEM', payload: newItem });
                 localStorage.setItem('cart', JSON.stringify(localCart));
@@ -108,6 +139,9 @@ const getCart = async () => {
         }
     };
     const editItem = async (qty, itemid) => {
+        if (qty < 1) {
+            return;
+        }
         if (id) {
             try {
                 const response = await DataService.UpdateCartitem(qty, saasId, storeId, id, itemid);
@@ -119,6 +153,7 @@ const getCart = async () => {
                 console.error('Failed to update item:', error);
             }
         } else {
+            
             const localCart = JSON.parse(localStorage.getItem('cart')) || [];
             const updatedCart = localCart.map(item => 
                 item.id === itemid ? { ...item, product_qty: qty } : item
