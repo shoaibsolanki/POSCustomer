@@ -47,9 +47,10 @@ console.log(images)
       <img 
         src={src} 
         alt={`Slide ${index + 1}`} 
+        className="max-h[300px]"
         style={{ 
           width: "100%", 
-          height: "300px", 
+          maxHeight: "300px", 
           objectFit: "contain" // Prevents stretching
         }} 
       />
