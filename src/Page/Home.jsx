@@ -1,7 +1,6 @@
 import React from 'react';
 import HeroSection from '../Componenets/HeroSection';
 import HorizontalCategoryList from '../Componenets/HorizontalCategoryList';
-import PopularProducts from '../Componenets/PopularProducts';
 
 const Home = () => {
     return (
@@ -9,7 +8,7 @@ const Home = () => {
       <div className="  max-w-[1800px] mx-auto px-4 my-2">
         <HeroSection />
         <HorizontalCategoryList/>
-        <PopularProducts />
+       
         {/* <SaleComponenet /> */}
         {/* <ImageSwitchProduct /> */}
         {/* <WhyUs /> */}
