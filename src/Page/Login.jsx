@@ -4,7 +4,7 @@ import { useAuth } from "../Context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Alert, CircularProgress, Snackbar } from "@mui/material";
 import { useCart } from "../Context/CartContext";
-import bgimage from "../assets/landingbg.png";
+import bgimage from "../assets/Bg.png";
 const Login = () => {
   const { login } = useAuth();
   const { ClearLocalCart } = useCart();

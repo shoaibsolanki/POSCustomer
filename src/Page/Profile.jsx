@@ -18,7 +18,7 @@ const Profile = () => {
     if (!isAuthenticated) {
       navigate("/login");
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated]);
 
   useEffect(() => {
     // getOrderHistory(storeId,saasId,id);
