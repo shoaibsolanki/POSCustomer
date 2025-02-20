@@ -96,9 +96,19 @@ const Landingpage = () => {
 
         const response = await DataService.GetStoreByPinCode(getaddress?.postalCode);
       console.log(response);
-      if(response.data.data.length > 0){
-        setStores(response.data.data)
-        navigate("/stores");
+      if(response.data.data){
+        const filteredStores = response.data.data.filter(store => store.empId === "Online");
+        console.log("filterd data",filteredStores)
+        setStores(filteredStores)
+        if(filteredStores.length >0){
+          navigate("/stores");
+        }else{
+          setSnackbar({
+            open: true,
+            message: "At This Time No Store Found on Your Location",
+            severity: "error",
+          });
+        }
       }else{
         setSnackbar({
           open: true,

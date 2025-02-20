@@ -80,7 +80,7 @@ const ProductComponent = ({ clearSelectedUom ,handleUomChange, Uom, data }) => {
             <option>Select Unit</option>
             {Uom.map((unit, index) => (
               <option key={index} value={Number(unit.uomname) / 1000}>
-                {unit.uomname}
+                {unit.uomname} gm
               </option>
             ))}
           </select> )}
