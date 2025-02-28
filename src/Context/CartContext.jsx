@@ -97,7 +97,7 @@ const getCart = async () => {
                 store_id: item.store_id,
                 promoId: item.promo_id,
                 item_quantity: item.product_qty,
-                gram: item.selectedUom ? `${parseFloat(item.selectedUom) * 1000}` : "1000", // Convert UOM to grams
+                gram: item.selectedUom ? `${parseFloat(item.selectedUom) * 1000}` : item.UOM== "E" ? "1": item.UOM , // Convert UOM to grams
                 hsnCode: item.hsn_code,
                 taxRate: item.tax_rate,
                 taxCode: item.tax_code,

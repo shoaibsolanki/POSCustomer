@@ -13,14 +13,19 @@ const CategoryWise = () => {
      const [subCatgory, setSubCatgory] = useState([]);
      const selectedStore = localStorage.getItem("selectedStore");
      const parsedStore = selectedStore ? JSON.parse(selectedStore) : null;
-     const { saasId, storeId } = parsedStore || {};
+     const { saasId, storeId ,storeType } = parsedStore || {};
      const {DataByCatogory,selectedsubcat,setSelectedsubCat , setPage ,setProducts} =useAuth()
     const GetSubCatgory = async () => {
         try {
           if (!categoryId) {
             return;
           }
-          const response = await DataService.GetSubCatrgory(
+          const response =
+          storeType == "multichanel" ?
+            await DataService.GetSubCatrgoryBySaasId(
+                saasId,
+                categoryId):
+          await DataService.GetSubCatrgory(
             saasId,
             storeId,
             categoryId

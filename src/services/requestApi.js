@@ -69,16 +69,29 @@ class DataService {
       `customer/get-all-customer-address-app/${id}/${saasId}/${storeId}`
     );
   }
+  GetMasterCategoryWithPincode(saasId,storeId,pincode){
+    return https.get(`Master-category/get-list-master/${saasId}/${storeId}/${pincode}`)
+  }
   GetMasterCategory(saasId,storeId){
     return https.get(`Master-category/get-list-master/${saasId}/${storeId}`)
+  }
+  
+  GetMasterCategoryBySaasId(saasId){
+    return https.get(`Master-category/get-list-master/${saasId}`)
   }
   
   GetSubCatrgory(saasId, storeId, MCID){
     return https.get(`Master-category/get-list/${saasId}/${storeId}/${MCID}`)
   }
+  GetSubCatrgoryBySaasId(saasId, MCID){
+    return https.get(`Master-category/get-list/${saasId}/${MCID}`)
+  }
 
   GetItemByCatogory(saasid, storeId , category_name, page){
     return https.get(`/item/get-category-list/${saasid}/${storeId}/${category_name}/${page}`)
+  }
+  GetItemByCatogoryBysaasid(saasid, category_name, page){
+    return https.get(`/item/get-category-list/${saasid}/${category_name}/${page}`)
   }
 
   getAddressofStores(){
@@ -107,6 +120,12 @@ class DataService {
   }
   SearchData(storeId, saasId, key){
     return https.get(`/search/get-result/${storeId}/${saasId}/${key}`)
+  }
+  SearchDataBysaasId( saasId, key){
+    return https.get(`/search/get-result/${saasId}/${key}`)
+  }
+  GetproductData(productId){
+    return https.get(`/search/market-place-get-itemByItemId/${productId}`)
   }
 }
 export default new DataService();

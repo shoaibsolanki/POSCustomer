@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }) => {
   });
   const selectedStore = localStorage.getItem("selectedStore");
   const parsedStore = selectedStore ? JSON.parse(selectedStore) : null;
-  const { saasId, storeId } = parsedStore || {};
+  const { saasId, storeId , storeType } = parsedStore || {};
   const [location, setLocation] = useState({
     latitude: null,
     longitude: null,
@@ -158,12 +158,22 @@ export const AuthProvider = ({ children }) => {
   const DataByCatogory = async () => {
     try {
       if(!selectedsubcat)return
-      const response = await DataService.GetItemByCatogory(
-        saasId,
-        storeId,
-        selectedsubcat,
-        page
-      );
+      var response = []
+      if(storeType == "multichanel"){
+        response = await DataService.GetItemByCatogoryBysaasid(
+          saasId,
+          selectedsubcat,
+          page
+        );
+
+      }else{
+        response = await DataService.GetItemByCatogory(
+          saasId,
+          storeId,
+          selectedsubcat,
+          page
+        );
+      }
       console.log(response);
   
       if (response.data.status) {
