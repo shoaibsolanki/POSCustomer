@@ -3,12 +3,14 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { useAuth } from '../Context/AuthContext';
 import ProductComponent from './ProductComponent';
 import DataService from '../services/requestApi'
+import { useNavigate } from 'react-router-dom';
 const PopularProducts = () => {
   const { hasMore, products, DataByCatogory, setProducts, setHasMore ,page,setPage} = useAuth();
   const selectedStore = localStorage.getItem('selectedStore');
   const parsedStore = selectedStore ? JSON.parse(selectedStore) : {};
   const { saasId,storeId  } = parsedStore;
   const [Uom , setUom] = useState([])
+ 
   // Function to fetch more data
   const fetchMoreData = async () => {
     try {
@@ -89,7 +91,7 @@ const PopularProducts = () => {
       >
         <div className="w-full mx-auto my-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4">
   {products.map((item, index) => (
-    <div key={index} className="inline-block">
+    <div  key={index} className="inline-block">
       <ProductComponent clearSelectedUom={clearSelectedUom} handleUomChange={handleUomChange} Uom={Uom} data={item} />
     </div>
   ))}
