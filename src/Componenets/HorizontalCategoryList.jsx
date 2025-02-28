@@ -8,23 +8,37 @@ import SearchComponent from "./MicroComponenets/SearchComponent";
 import PopularProducts from "./PopularProducts";
 
 const HorizontalCategoryList = () => {
-    const {DataByCatogory,selectedsubcat,setSelectedsubCat , setPage ,setProducts} =useAuth()
+    const {DataByCatogory,getLocation, setPage ,setProducts ,getaddress} =useAuth()
     const navigate = useNavigate()
   const [categories, setcategories] = useState([]);
-  const [subCatgory, setSubCatgory] = useState([]);
   const selectedStore = localStorage.getItem("selectedStore");
   const parsedStore = selectedStore ? JSON.parse(selectedStore) : null;
-  const { saasId, storeId } = parsedStore || {};
+  const { saasId, storeId ,pincodeWisecategory,storeType } = parsedStore || {};
   const [selectedmaster, setmasterSelected] = useState("");
   const [searchedtext, setSearchText] = useState("")
   const naviagte = useNavigate();
+  
   const GetCatogroy = async () => {
     try {
       if (!storeId && !saasId) {
         naviagte("/landing");
         return;
       }
-      const response = await DataService.GetMasterCategory(saasId, storeId);
+      if (pincodeWisecategory && !getaddress.postalCode) {
+        await getLocation();
+        return;
+      }
+      var response = []
+      if(storeType == "multichanel"){
+        response = await  DataService.GetMasterCategoryBySaasId(saasId)
+        
+      }else{
+        if(pincodeWisecategory){
+           response = await  DataService.GetMasterCategoryWithPincode(saasId, storeId , getaddress.postalCode)
+        }else{
+           response = await DataService.GetMasterCategory(saasId, storeId);
+        }
+      }
       console.log(response);
       setcategories(response.data.data);
       setmasterSelected(response.data.data[0]?.masterCategoryId);
@@ -37,7 +51,7 @@ const HorizontalCategoryList = () => {
 //Use Effect Start
   useEffect(() => {
     GetCatogroy();
-  }, []);
+  }, [getaddress.postalCode]);
 
    const searchItems = async (searchText) => {
           try {
@@ -47,7 +61,10 @@ const HorizontalCategoryList = () => {
                   return;
               }
               setSearchText(searchText)
-              const response = await DataService.SearchData(storeId, saasId, searchText);
+              const response =
+              storeType == "multichanel"?
+              await DataService.SearchDataBysaasId(saasId, searchText):
+              await DataService.SearchData(storeId, saasId, searchText);
               if (response.data.status) {
                   // Handle the search results here
                   console.log(response.data.data);
@@ -108,33 +125,6 @@ const HorizontalCategoryList = () => {
       </div>
       </>
       }
-      {/* <div className="w-full mx-auto my-8 overflow-x-auto whitespace-nowrap">
-        <div className="inline-flex space-x-4">
-          {subCatgory.map((category, index) => (
-            <div onClick={()=>{setSelectedsubCat(category.category);
-              setPage(1)
-          }} key={index} className="inline-block text-center w-fit">
-              <img
-              className="w-24 h-24 object-cover rounded-full mx-auto cursor-pointer"
-              src={`${BASEURL.ENDPOINT_URL}category/get-category-image/${category.id}`}
-              // alt={category.name}
-            />
-              <p
-                className="mt-2 text-lg font-semibold cursor-pointer p-3 rounded"
-                style={{
-                  background: selectedsubcat == category.category ? "#003f62" : "",
-                  color: selectedsubcat == category.category ? "#fff" : "black",
-                }}
-                onClick={()=>{setSelectedsubCat(category.category);
-                    setPage(1)
-                }}
-              >
-                {category.category}
-              </p>
-            </div>
-          ))}
-        </div>
-      </div> */}
     </>
   );
 };
