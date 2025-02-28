@@ -15,6 +15,7 @@ import Profile from './Page/Profile';
 import Checkout from './Page/Checkout';
 import OrderComplete from './Page/CheckOutsummery';
 import CategoryWise from './Page/CategoryWise';
+import ProductPage from './Page/Producpage';
 function App() {
   const [count, setCount] = useState(0)
 
@@ -34,6 +35,7 @@ function App() {
         <Route path="/checkout" element={<Checkout/>} />
         <Route path="/cart/checkout/summary" element={<OrderComplete/>} />
         <Route path="/category/:categoryId" element={<CategoryWise/>} />
+        <Route path='/Productpage/:Id' element={<ProductPage/>}/>
 
         <Route path="profile" element={<Profile/>} />
 
