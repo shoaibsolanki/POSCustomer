@@ -4,8 +4,10 @@ import AddToCartButton from "./AddToCartButton";
 import ClearIcon from '@mui/icons-material/Clear';
 import { useCart } from "../Context/CartContext";
 import { Image } from "antd";
+import { useNavigate } from "react-router-dom";
 const ProductComponent = ({ clearSelectedUom ,handleUomChange, Uom, data }) => {
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate()
   const { bankAccount ,saasId,storeId  } = JSON.parse(localStorage.getItem("selectedStore"));
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -38,7 +40,7 @@ const ProductComponent = ({ clearSelectedUom ,handleUomChange, Uom, data }) => {
 
   return (
     <div className="w-full sm:w-[18rem] bg-white shadow-lg rounded-lg overflow-hidden m-2 inline-block">
-      <div className="relative">
+      <div onClick={()=>{navigate(`/Productpage/${data.item_id}`)}} className="relative cursor-pointer">
         <Image
           className="w-full h-36 sm:h-40 bg-[#D6B6FA] object-cover"
           style={{height:"9rem" , width:"100%"}}
@@ -47,7 +49,7 @@ const ProductComponent = ({ clearSelectedUom ,handleUomChange, Uom, data }) => {
         />
       </div>
       <div className="p-4">
-        <h2 className="product-title text-primary text-start text-sm sm:text-base">
+        <h2 onClick={()=>{navigate(`/Productpage/${data.item_id}`)}} className="product-title cursor-pointer text-primary text-start text-sm sm:text-base">
           {data?.item_name?.length > 30 ? `${data?.item_name?.slice(0, 30)}...` : data?.item_name}
         </h2>
         <div className="flex gap-3">
@@ -60,7 +62,7 @@ const ProductComponent = ({ clearSelectedUom ,handleUomChange, Uom, data }) => {
         </div>
         <p className="text-gray-600 text-start font-semibold text-sm sm:text-base">{data?.category}</p>
         <div className="flex flex-col sm:flex-row gap-3 justify-between items-center">
-          <AddToCartButton item={data} />
+        {!(data.UOM === "W" && !data.selectedUom) && <AddToCartButton item={data} />}
           {data?.selectedUom?<>
           <p className="text-gray-600 text-start font-semibold text-sm sm:text-base">
             {data.selectedUom * 1000} gm 
@@ -76,14 +78,23 @@ const ProductComponent = ({ clearSelectedUom ,handleUomChange, Uom, data }) => {
           </p> 
           </> :
           
-         (data.UOM == "W" &&<select value={data?.selectedUom} onChange={(e)=>{handleUomChange(e , data.item_id)}} className="w-32 border rounded h-10">
+         (data.UOM == "W" ?<select value={data?.selectedUom} onChange={(e)=>{handleUomChange(e , data.item_id)}} className="w-32 border rounded h-10">
             <option>Select Unit</option>
             {Uom.map((unit, index) => (
               <option key={index} value={Number(unit.uomname) / 1000}>
                 {unit.uomname} gm
               </option>
             ))}
-          </select> )}
+          </select>
+        :<>{data.UOM !== "E" ?
+          <p className="px-4 text-gray-600 text-start font-semibold text-sm sm:text-base">
+            {data.UOM === "1000" ? "1Kg" : data.UOM + "gm"}
+          </p>: 
+          <p className="px-4 text-gray-600 text-start font-semibold text-sm sm:text-base">
+            1 Pcs
+        </p>
+          }</>
+        )}
         </div>
       </div>
     </div>
