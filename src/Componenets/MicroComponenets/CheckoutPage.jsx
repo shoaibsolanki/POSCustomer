@@ -36,7 +36,7 @@ const TotalOrderQeuntity = cart && cart.reduce((total, item) => {
   const { id,  mobileNumber, name } = authData;
   const selectedStore = localStorage.getItem('selectedStore');
   const parsedStore = selectedStore ? JSON.parse(selectedStore) : null;
-  const { saasId, storeId,store_logo,store_name,address,phone_no,country ,key_id} = parsedStore || {};
+  const { saasId, storeId,store_logo,store_name,address,phone_no,country ,key_id,storeType} = parsedStore || {};
   const [billingAddress, setBillingAddress] = useState(false);
   const [savedAddresses, setSavedAddresses] = useState([]);
   const [showNewAddressForm, setShowNewAddressForm] = useState(false);
@@ -206,8 +206,8 @@ const TotalOrderQeuntity = cart && cart.reduce((total, item) => {
         return;
       }
       setIsLoading(true)
-      const orderInformations = {
-        address_id: deliveryMethod == "Pickup"?"":data.address_id,
+       const orderInformations = {
+        address_id: data.address_id,
         customer_id: id,
         customer_name: name,
         mobile_number: mobileNumber,
@@ -219,15 +219,90 @@ const TotalOrderQeuntity = cart && cart.reduce((total, item) => {
         status: "pending",
         payment_type: selectedMethod,
         order_qty: TotalOrderQeuntity,
-        razorpay_order_id: selectedMethod=="online"?paymentResponse.razorpay_order_id:"",
-        razorpay_payment_id: selectedMethod=="online"?paymentResponse.razorpay_payment_id:"",
+        razorpay_order_id: selectedMethod === "online" ? paymentResponse.razorpay_order_id : "",
+        razorpay_payment_id: selectedMethod === "online" ? paymentResponse.razorpay_payment_id : "",
         order_date: new Date(),
-        order_type: deliveryMethod,
+        order_type: "Online",
         item_list: updatedCart,
       };
-
+  
+      // If storeType is "multichanel", group items by saas_id and store_id
+      let finalOrder = [];
+      if (storeType === "multichanel") {
+        const groupedOrders = cart.reduce((acc, item) => {
+          const key = `${item.saas_id}-${item.store_id}`;
+          if (!acc[key]) {
+            acc[key] = {
+              saas_id: item.saas_id,
+              store_id: item.store_id,
+              order_tax: 0, // Update if needed
+              order_value: 0,
+              order_discount: 0,
+              status: "pending",
+              payment_type: selectedMethod,
+              razorpay_order_id: selectedMethod === "online" ? paymentResponse.razorpay_order_id : "",
+              razorpay_payment_id: selectedMethod === "online" ? paymentResponse.razorpay_payment_id : "",
+              wallet_balance: 309, // Adjust if needed
+              item_list: [],
+            };
+          }
+  
+          // Format item structure
+          const formattedItem = {
+            item_id: item.item_id,
+            item_name: item.item_name,
+            description: item.description || item.item_name,
+            price: item.price || 0,
+            price_pcs: item.price_pcs || null,
+            product_qty: item.productQty,
+            discount: item.discount || 0,
+            tax: item.tax || null,
+            tax_percent: item.tax_percent || 0,
+            status: item.status || null,
+            category: item.category || "",
+            saas_id: item.saas_id,
+            store_id: item.store_id,
+            promo_id: item.promo_id || null,
+            image_name: item.image_name || null,
+            hsn_code: item.hsn_code || null,
+            tax_rate: item.tax_rate || 0,
+            barcode: item.barcode || null,
+            supplier_name: item.supplier_name || "",
+            opening_qty: item.opening_qty || 0,
+            received_qty: item.received_qty || null,
+            sold_qty: item.sold_qty || null,
+            closing_qty: item.closing_qty || null,
+            product_cost: item.product_cost || null,
+            product_price: item.product_price || null,
+            product_av_cost: item.product_av_cost || null,
+            mrp: item.mrp || null,
+            sku: item.sku || null,
+            bill_qty: item.bill_qty || 0,
+            name: item.item_name,
+            new_price: item.newPrice || item.price,
+            discount_menu_is_open: null,
+            discount_value: null,
+            amount_value: null,
+            zero_price: null,
+            finalDisc: 0,
+            gram: item.UOM || 1000,
+          };
+  
+          acc[key].item_list.push(formattedItem);
+          acc[key].order_value += formattedItem.price * formattedItem.product_qty;
+          acc[key].order_discount += formattedItem.discount;
+  
+          return acc;
+        }, {});
+  
+        finalOrder = Object.values(groupedOrders);
+      }
+  
+      // Store data in local storage
       localStorage.setItem("orderInformations", JSON.stringify(cart));
-      const response = await DataService.CreateOrder(orderInformations);
+  
+      // Condition to determine which order structure to send
+      const response = storeType === "multichanel" ? await DataService.CreateOrderforMultiChannel(id,data.address_id,finalOrder) : await DataService.CreateOrder( orderInformations);
 
       localStorage.setItem("orderMaster", JSON.stringify(response.data));
       console.log("Order placed:", response);
@@ -269,7 +344,7 @@ const TotalOrderQeuntity = cart && cart.reduce((total, item) => {
   const handlePlaceOrder = async (data, paymentResponse) => {
     try {
       const updatedCart = cart.map((item) => ({ ...item, productQty: 0 }));
-      if(updatedCart?.length == 0 ){
+      if (updatedCart?.length === 0) {
         setSnackbar({
           open: true,
           message: "Cart is empty",
@@ -277,6 +352,8 @@ const TotalOrderQeuntity = cart && cart.reduce((total, item) => {
         });
         return;
       }
+  
+      // Standard order structure (for non-multichanel stores)
       const orderInformations = {
         address_id: data.address_id,
         customer_id: id,
@@ -290,23 +367,97 @@ const TotalOrderQeuntity = cart && cart.reduce((total, item) => {
         status: "pending",
         payment_type: selectedMethod,
         order_qty: TotalOrderQeuntity,
-        razorpay_order_id: selectedMethod=="online"?paymentResponse.razorpay_order_id:"",
-        razorpay_payment_id: selectedMethod=="online"?paymentResponse.razorpay_payment_id:"",
+        razorpay_order_id: selectedMethod === "online" ? paymentResponse.razorpay_order_id : "",
+        razorpay_payment_id: selectedMethod === "online" ? paymentResponse.razorpay_payment_id : "",
         order_date: new Date(),
         order_type: "Online",
         item_list: updatedCart,
       };
-
+  
+      // If storeType is "multichanel", group items by saas_id and store_id
+      let finalOrder = [];
+      if (storeType === "multichanel") {
+        const groupedOrders = cart.reduce((acc, item) => {
+          const key = `${item.saas_id}-${item.store_id}`;
+          if (!acc[key]) {
+            acc[key] = {
+              saas_id: item.saas_id,
+              store_id: item.store_id,
+              order_tax: 0, // Update if needed
+              order_value: 0,
+              order_discount: 0,
+              status: "pending",
+              payment_type: selectedMethod,
+              razorpay_order_id: selectedMethod === "online" ? paymentResponse.razorpay_order_id : "",
+              razorpay_payment_id: selectedMethod === "online" ? paymentResponse.razorpay_payment_id : "",
+              wallet_balance: 309, // Adjust if needed
+              item_list: [],
+            };
+          }
+  
+          // Format item structure
+          const formattedItem = {
+            item_id: item.item_id,
+            item_name: item.item_name,
+            description: item.description || item.item_name,
+            price: item.price || 0,
+            price_pcs: item.price_pcs || null,
+            product_qty: item.productQty,
+            discount: item.discount || 0,
+            tax: item.tax || null,
+            tax_percent: item.tax_percent || 0,
+            status: item.status || null,
+            category: item.category || "",
+            saas_id: item.saas_id,
+            store_id: item.store_id,
+            promo_id: item.promo_id || null,
+            image_name: item.image_name || null,
+            hsn_code: item.hsn_code || null,
+            tax_rate: item.tax_rate || 0,
+            barcode: item.barcode || null,
+            supplier_name: item.supplier_name || "",
+            opening_qty: item.opening_qty || 0,
+            received_qty: item.received_qty || null,
+            sold_qty: item.sold_qty || null,
+            closing_qty: item.closing_qty || null,
+            product_cost: item.product_cost || null,
+            product_price: item.product_price || null,
+            product_av_cost: item.product_av_cost || null,
+            mrp: item.mrp || null,
+            sku: item.sku || null,
+            bill_qty: item.bill_qty || 0,
+            name: item.item_name,
+            new_price: item.newPrice || item.price,
+            discount_menu_is_open: null,
+            discount_value: null,
+            amount_value: null,
+            zero_price: null,
+            finalDisc: 0,
+            gram: item.UOM || 1000,
+          };
+  
+          acc[key].item_list.push(formattedItem);
+          acc[key].order_value += formattedItem.price * formattedItem.product_qty;
+          acc[key].order_discount += formattedItem.discount;
+  
+          return acc;
+        }, {});
+  
+        finalOrder = Object.values(groupedOrders);
+      }
+  
+      // Store data in local storage
       localStorage.setItem("orderInformations", JSON.stringify(cart));
-      const response = await DataService.CreateOrder(orderInformations);
-
+  
+      // Condition to determine which order structure to send
+      const response = storeType === "multichanel" ? await DataService.CreateOrderforMultiChannel(id,data.address_id,finalOrder) : await DataService.CreateOrder( orderInformations);
+  
       localStorage.setItem("orderMaster", JSON.stringify(response.data));
       console.log("Order placed:", response);
-
+  
       if (response.status === 200) {
-        console.log("Order placed");
-        await getOrderHistory(storeId,saasId,id);
-
+        console.log("Order placed successfully");
+        await getOrderHistory(storeId, saasId, id);
         clearCart();
         setIsPaymentSuccessful(true);
         navigate("/cart/checkout/summary");

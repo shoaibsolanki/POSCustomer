@@ -61,6 +61,9 @@ class DataService {
   CreateOrder(data) {
     return https.post(`/order/create/order/master`, data);
   }
+  CreateOrderforMultiChannel(custId, addId,data) {
+    return https.post(`/order/masterplace-create/order/master/${custId}/${addId}`, data);
+  }
   SaveAddress(data, id) {
     return https.post(`customer/create-address/${id}`, data);
   }
