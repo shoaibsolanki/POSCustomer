@@ -58,6 +58,11 @@ class DataService {
       `order/view-order-detail-app/${storeId}/${saasId}/${id}`
     );
   }
+  OrderHistoryBYsaasid( saasId, id) {
+    return https.get(
+      `order/view-order-detail-app/${saasId}/${id}`
+    );
+  }
   CreateOrder(data) {
     return https.post(`/order/create/order/master`, data);
   }

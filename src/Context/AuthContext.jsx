@@ -203,7 +203,7 @@ export const AuthProvider = ({ children }) => {
 
   const getOrderHistory = async (store_id, saas_id, id) => {
     try {
-      const response = await DataService.OrderHistory(store_id, saas_id, id);
+      const response = storeType == "multichanel"?  await DataService.OrderHistoryBYsaasid( saas_id, id) : await DataService.OrderHistory(store_id, saas_id, id);
       const reversedOrders = response.data.data.slice().reverse();
       setAllOrders(reversedOrders);
     } catch (error) {
