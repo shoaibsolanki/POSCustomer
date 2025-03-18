@@ -20,14 +20,18 @@ const HorizontalCategoryList = () => {
   
   const GetCatogroy = async () => {
     try {
+      const storedPincode = localStorage.getItem("pinCode");
+      if (storedPincode) {
+        getaddress.postalCode = storedPincode;
+      }
       if (!storeId && !saasId) {
         naviagte("/landing");
         return;
       }
-      if (pincodeWisecategory && !getaddress.postalCode) {
-        await getLocation();
-        return;
-      }
+      // if (pincodeWisecategory && !getaddress.postalCode) {
+      //   await getLocation();
+      //   return;
+      // }
       var response = []
       if(storeType == "multichanel"){
         response = await  DataService.GetMasterCategoryBySaasId(saasId)

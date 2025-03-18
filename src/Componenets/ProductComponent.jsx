@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 const ProductComponent = ({ clearSelectedUom ,handleUomChange, Uom, data }) => {
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate()
-  const { bankAccount ,saasId,storeId  } = JSON.parse(localStorage.getItem("selectedStore"));
+  const { bankAccount ,saasId,storeId ,storeType } = JSON.parse(localStorage.getItem("selectedStore"));
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
@@ -40,7 +40,11 @@ const ProductComponent = ({ clearSelectedUom ,handleUomChange, Uom, data }) => {
 
   return (
     <div className="w-full sm:w-[18rem] bg-white shadow-lg rounded-lg overflow-hidden m-2 inline-block">
-      <div onClick={()=>{navigate(`/Productpage/${data.item_id}`)}} className="relative cursor-pointer">
+      <div onClick={()=>{
+        if(storeType=="storeType"){
+          navigate(`/Productpage/${data.item_id}`)
+        }
+        }} className="relative cursor-pointer">
         <Image
           className="w-full h-36 sm:h-40 bg-[#D6B6FA] object-cover"
           style={{height:"9rem" , width:"100%"}}
