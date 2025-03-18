@@ -1,4 +1,6 @@
 import { Button } from "@mui/material";
+import { SentimentSatisfied, SentimentDissatisfied } from "@mui/icons-material";
+import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
 import Placeholder from "../Componenets/MicroComponenets/Placeholder";
 import PropTypes from "prop-types";
 // import keychain from ".././imgs/keychain.png";
@@ -13,6 +15,8 @@ import { BASEURL } from "../services/http-Pos";
 const OrderComplete = ({ className = "" }) => {
   const [orderInformations, setOrderInformations] = useState(null);
   const [orderSummery, setOrderSummery] = useState(null);
+  const [feedback, setFeedback] = useState(null);
+
   useEffect(() => {
     const savedOrderInformations = localStorage.getItem("orderInformations");
     if (savedOrderInformations) {
@@ -39,6 +43,13 @@ const OrderComplete = ({ className = "" }) => {
     month: "long",
     day: "numeric",
   });
+
+  const handleFeedback = (type) => {
+    setFeedback(type);
+    console.log("Feedback submitted:", type);
+    // Handle feedback submission logic here
+  };
+
   if (!isPaymentSuccessful) {
     navigate("/cart");
   } else
@@ -138,6 +149,43 @@ const OrderComplete = ({ className = "" }) => {
                 Purchase history
               </Button>
             </a>
+          </div>
+          <div className="w-[548px] flex flex-col items-center justify-center max-w-full mt-8">
+            <h2 className="text-2xl font-semibold mb-4">We value your feedback</h2>
+            <div className="flex flex-row gap-4">
+              <Button
+                onClick={() => handleFeedback("happy")}
+                variant="contained"
+                sx={{
+                  textTransform: "none",
+                  color: "#fff",
+                  fontSize: "16",
+                  background: feedback === "happy" ? "#4caf50" : "#eda315",
+                  borderRadius: "50%",
+                  width: 60,
+                  height: 60,
+                  "&:hover": { background: feedback === "happy" ? "#4caf50" : "#eda315" },
+                }}
+              >
+                <SentimentSatisfied fontSize="large" />
+              </Button>
+              <Button
+                onClick={() => handleFeedback("unhappy")}
+                variant="contained"
+                sx={{
+                  textTransform: "none",
+                  color: "#fff",
+                  fontSize: "16",
+                  background: feedback === "unhappy" ? "#f44336" : "#eda315",
+                  borderRadius: "50%",
+                  width: 60,
+                  height: 60,
+                  "&:hover": { background: feedback === "unhappy" ? "#f44336" : "#eda315" },
+                }}
+              >
+                <SentimentDissatisfied fontSize="large" />
+              </Button>
+            </div>
           </div>
         </div>{" "}
       </div>
