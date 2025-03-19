@@ -135,5 +135,11 @@ class DataService {
   GetproductData(productId){
     return https.get(`/search/market-place-get-itemByItemId/${productId}`)
   }
+  GetProductByStoreId(storeId){
+    return https.get(`/search/market-place-get-itemByStoreId/${storeId}`)
+  }
+  FeedBackApi(orderId, status){
+    return https.post(`/order/feed_back/${orderId}/${status}`)
+  }
 }
 export default new DataService();
