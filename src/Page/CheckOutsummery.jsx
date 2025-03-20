@@ -1,6 +1,5 @@
 import { Button } from "@mui/material";
 import { SentimentSatisfied, SentimentDissatisfied } from "@mui/icons-material";
-import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
 import Placeholder from "../Componenets/MicroComponenets/Placeholder";
 import PropTypes from "prop-types";
 // import keychain from ".././imgs/keychain.png";
@@ -168,11 +167,11 @@ const OrderComplete = ({ className = "" }) => {
               textTransform: "none",
               color: "#fff",
               fontSize: "16",
-              background: feedback === "happy" ? "#4caf50" : "#eda315",
+              background: "#4caf50",
               borderRadius: "50%",
               width: 60,
               height: 60,
-              "&:hover": { background: feedback === "happy" ? "#4caf50" : "#eda315" },
+              // "&:hover": { background: feedback === "happy" ? "#4caf50" : "#eda315" },
             }}
             >
             <SentimentSatisfied fontSize="large" />
@@ -184,11 +183,11 @@ const OrderComplete = ({ className = "" }) => {
               textTransform: "none",
               color: "#fff",
               fontSize: "16",
-              background: feedback === "unhappy" ? "#f44336" : "#eda315",
+              background: "#f44336",
               borderRadius: "50%",
               width: 60,
               height: 60,
-              "&:hover": { background: feedback === "unhappy" ? "#f44336" : "#eda315" },
+              // "&:hover": { background: feedback === "unhappy" ? "#f44336" : "#eda315" },
             }}
             >
             <SentimentDissatisfied fontSize="large" />
