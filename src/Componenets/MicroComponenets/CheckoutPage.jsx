@@ -554,7 +554,8 @@ const TotalOrderQeuntity = cart && cart.reduce((total, item) => {
       }
     } catch (error) {
       setIsLoading(false);
-      if (error?.response?.data?.message == "User Already Registered") {
+      console.log(error)
+      if (error?.response?.data?.meta?.message == "User Already Registered") {
         setSnackbar({
           open: true,
           message: "User Already Registered!",
